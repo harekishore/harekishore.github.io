@@ -135,41 +135,40 @@
 
   // Batch SDK setup 
 <script type="text/javascript">
+      /* Load remote Batch SDK JavaScript code */
 (function(b,a,t,c,h,e,r){h='batchSDK';b[h]=b[h]||function() {
-  (b[h].q=b[h].q||[]).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
-  e.async=1;e.src=c;r.parentNode.insertBefore(e,r);})(window,document,'script','https://via.batch.com/v4/bootstrap.min.js');
-    
-  var batchSDKUIConfig = { // refer to the documentation to learn more https://batch.com/doc/web/ui-components.html
+    (b[h].q=b[h].q||[]).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
+    e.async=1;e.src=c;r.parentNode.insertBefore(e,r);})(window,document,'script','https://via.batch.com/v4/bootstrap.min.js');
+
+/* Initiate Batch SDK opt-in UI configuration (native prompt) */
+var batchSDKUIConfig = {
     native: {}
-  }
-    
-  // Firefox and Safari specific configuration
-  if ((navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1) &&
-navigator.userAgent.indexOf("Chrome") === -1))  {
+};
+
+/* Use a specific configuration for Firefox and Safari browsers (custom prompt) */
+if (navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1 &&
+navigator.userAgent.indexOf("Chrome") === -1)) {
     batchSDKUIConfig = {
-      alert: {
-        text: 'Subscribe to push notifications', //TODO 🔶 [1] Update to contextualize subscription request 
-        positiveBtnStyle: {
-          "backgroundColor":'[COLOR IN HEXADECIMAL]',// TODO 🔶 [2] update backgroundColor value
-          "hoverBackgroundColor": '[COLOR IN HEXADECIMAL]'// TODO 🔶 [3] update hoverBackgroundColor value
-          },
-          positiveSubBtnLabel: 'I subscribe!',// TODO 🔶 [4] update positiveSubBtnLabel value
-          negativeBtnLabel: 'No, thanks'// TODO 🔶 [5] update negativeBtnLabel value
-          }  
-      }
-  }
-  // end Firefox and Safari specific configuration
-  
-  batchSDK('setup', {
-    apiKey: '0156DACDF9464DFD86BBFF157A5D89A1',  // TODO 🔶: Use the SDK API Key of your website (see Settings section of your dashboard)
-    subdomain: 'github8', // TODO 🔶: Use the Subdomain name of your website (see Settings section of your dashboard, do not include the ".via.batch.com" part)
-    authKey: '2.XTJEBjoNTLbER6RbFM05akUCjFxhnh6v4i7RD3auyNQ=', // TODO 🔶: Use the SDK Auth Key of your app (see Settings section of your dashboard)
-    // dev: true, // remove this for prod
-    vapidPublicKey: 'BEqyIxJJQ7OMOs11ZeRsESdP6+O1gGmE3T1eKHVpg+t8YJSQYo3q0tIZhPqB3XUyR4NZ+mr9KnjCIqqAdJJ6vXo=', // TODO 🔶: Use the vapidPublicKey of your website (see Settings section of your dashboard)
+        alert: {
+          icon: 'https://secure.url.to.your.icon.jpg'
+        }
+    }
+}
+
+/* Finalize the Batch SDK setup */
+batchSDK('setup', {
+    apiKey: '0156DACDF9464DFD86BBFF157A5D89A1',
+    subdomain: 'github8',
+    authKey: '2.XTJEBjoNTLbER6RbFM05akUCjFxhnh6v4i7RD3auyNQ=',
+    dev: true, // remove this for prod
+    vapidPublicKey: 'BEqyIxJJQ7OMOs11ZeRsESdP6+O1gGmE3T1eKHVpg+t8YJSQYo3q0tIZhPqB3XUyR4NZ+mr9KnjCIqqAdJJ6vXo=',
     ui: batchSDKUIConfig,
-    // Add the generated Safari object here if applicable
-  });
+    // defaultIcon: 'https://path.to/my/logo-192/png', // for Chrome desktop
+    // smallIcon: 'https://path.to/my/icon-96.png', // for Chrome Android
+    
+});
 </script>
+      
 
   
 
