@@ -167,9 +167,10 @@ navigator.userAgent.indexOf("Chrome") === -1))  {
     // Add the generated Safari object here if applicable
   });
 
-    batchSDK(async api => {
-    const profile = await api.profile();
-    await profile.identify({customId: "harikishore"});
+batchSDK(api => {
+  api.profile().then(profile => {
+    profile.identify({customId: "my_custom_user_id"});
+  });
 });
 </script>  
 
