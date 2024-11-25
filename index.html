@@ -145,36 +145,31 @@ var batchSDKUIConfig = {
     native: {}
 };
 
- // Firefox and Safari specific configuration
-  if ((navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1) &&
-navigator.userAgent.indexOf("Chrome") === -1))  {
+/* Use a specific configuration for Firefox and Safari browsers (custom prompt) */
+if (navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1 &&
+navigator.userAgent.indexOf("Chrome") === -1)) {
     batchSDKUIConfig = {
-      alert: {
-        text: 'Subscribe to push notifications', //TODO 🔶 [1] Update to contextualize subscription request 
-        positiveBtnStyle: {
-          "backgroundColor":'[COLOR IN HEXADECIMAL]',// TODO 🔶 [2] update backgroundColor value
-          "hoverBackgroundColor": '[COLOR IN HEXADECIMAL]'// TODO 🔶 [3] update hoverBackgroundColor value
-          },
-          positiveSubBtnLabel: 'I subscribe!',// TODO 🔶 [4] update positiveSubBtnLabel value
-          negativeBtnLabel: 'No, thanks'// TODO 🔶 [5] update negativeBtnLabel value
-          }  
-      }
-  }
-  // end Firefox and Safari specific configuration
+        alert: {
+          icon: 'https://secure.url.to.your.icon.jpg'
+        }
+    }
+}
 
 /* Finalize the Batch SDK setup */
 batchSDK('setup', {
-    apiKey: '0156DACDF9464DFD86BBFF157A5D89A1',
-    subdomain: 'github8',
-    authKey: '2.XTJEBjoNTLbER6RbFM05akUCjFxhnh6v4i7RD3auyNQ=',
+    apiKey: '914365FD444E46409B106957E00D982E',
+    subdomain: 'github9',
+    authKey: '2.sX1dpHD2Wx0KuRraQKiBWeDGJiuab+a8+ZaU+AnDiSY=',
     dev: true, // remove this for prod
-    vapidPublicKey: 'BEqyIxJJQ7OMOs11ZeRsESdP6+O1gGmE3T1eKHVpg+t8YJSQYo3q0tIZhPqB3XUyR4NZ+mr9KnjCIqqAdJJ6vXo=',
+    vapidPublicKey: 'BGfaYJWbSLunJGqlmuRqLBQfyxhC4ciTmaHecXiGh1ncq3tnFJGcOMN8/JrtscHC29IprjLfeqoZDb8kMj4SqY0=',
     ui: batchSDKUIConfig,
     // defaultIcon: 'https://path.to/my/logo-192/png', // for Chrome desktop
     // smallIcon: 'https://path.to/my/icon-96.png', // for Chrome Android
     
 });
 </script>
+      
+
       
 
   
