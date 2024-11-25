@@ -166,7 +166,14 @@ navigator.userAgent.indexOf("Chrome") === -1))  {
     ui: batchSDKUIConfig,
     // Add the generated Safari object here if applicable
   });
+
+    batchSDK(async api => {
+    const profile = await api.profile();
+    await profile.identify({customId: "harikishore"});
+});
 </script>  
+
+
 
 </head>
 
