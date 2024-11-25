@@ -133,45 +133,40 @@
     
   </script> -->
 
-  // Batch SDK setup 
+// Batch SDK setup 
 <script type="text/javascript">
-      /* Load remote Batch SDK JavaScript code */
 (function(b,a,t,c,h,e,r){h='batchSDK';b[h]=b[h]||function() {
-    (b[h].q=b[h].q||[]).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
-    e.async=1;e.src=c;r.parentNode.insertBefore(e,r);})(window,document,'script','https://via.batch.com/v4/bootstrap.min.js');
-
-/* Initiate Batch SDK opt-in UI configuration (native prompt) */
-var batchSDKUIConfig = {
+  (b[h].q=b[h].q||[]).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
+  e.async=1;e.src=c;r.parentNode.insertBefore(e,r);})(window,document,'script','https://via.batch.com/v4/bootstrap.min.js');
+    
+  var batchSDKUIConfig = { // refer to the documentation to learn more https://batch.com/doc/web/ui-components.html
     native: {}
-};
-
-/* Use a specific configuration for Firefox and Safari browsers (custom prompt) */
-if (navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1 &&
-navigator.userAgent.indexOf("Chrome") === -1)) {
+  }
+ // Firefox and Safari specific configuration
+  if ((navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1) &&
+navigator.userAgent.indexOf("Chrome") === -1))  {
     batchSDKUIConfig = {
-        alert: {
-          icon: 'https://secure.url.to.your.icon.jpg'
-        }
-    }
-}
-
-/* Finalize the Batch SDK setup */
-batchSDK('setup', {
-    apiKey: '914365FD444E46409B106957E00D982E',
+      alert: {
+        text: 'Subscribe to push notifications', //TODO 🔶 [1] Update to contextualize subscription request 
+        positiveBtnStyle: {
+          "backgroundColor":'[COLOR IN HEXADECIMAL]',// TODO 🔶 [2] update backgroundColor value
+          "hoverBackgroundColor": '[COLOR IN HEXADECIMAL]'// TODO 🔶 [3] update hoverBackgroundColor value
+          },
+          positiveSubBtnLabel: 'I subscribe!',// TODO 🔶 [4] update positiveSubBtnLabel value
+          negativeBtnLabel: 'No, thanks'// TODO 🔶 [5] update negativeBtnLabel value
+          }  
+      }
+  }
+  // end Firefox and Safari specific configuration
+  batchSDK('setup', {
+   apiKey: '914365FD444E46409B106957E00D982E',
     subdomain: 'github9',
     authKey: '2.sX1dpHD2Wx0KuRraQKiBWeDGJiuab+a8+ZaU+AnDiSY=',
     vapidPublicKey: 'BGfaYJWbSLunJGqlmuRqLBQfyxhC4ciTmaHecXiGh1ncq3tnFJGcOMN8/JrtscHC29IprjLfeqoZDb8kMj4SqY0=',
     ui: batchSDKUIConfig,
-    // defaultIcon: 'https://path.to/my/logo-192/png', // for Chrome desktop
-    // smallIcon: 'https://path.to/my/icon-96.png', // for Chrome Android
-    
-});
-</script>
-      
-
-      
-
-  
+    // Add the generated Safari object here if applicable
+  });
+</script>  
 
 </head>
 
