@@ -2,6 +2,52 @@
 <html lang="en">
 
 <head>
+ <script> // Read UTM Params
+  // Function to get the value of a URL parameter by name
+function getQueryParam(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+   // Assign the parameters to the form fields
+    if (getQueryParam('user-email')) {
+      document.getElementById('user-email').textContent = getQueryParam('user-email');
+    }
+	if (getQueryParam('birthday')) {
+      document.getElementById('birthday').value = getQueryParam('birthday');
+    }
+    if (getQueryParam('firstName')) {
+      document.getElementById('firstName').value = getQueryParam('firstName');
+    }
+    if (getQueryParam('lastName')) {
+      document.getElementById('lastName').value = getQueryParam('lastName');
+    }
+    if (getQueryParam('title')) {
+      // Find the option that matches the 'title' parameter and select it
+      var titleOptions = document.getElementById('title').options;
+      for (var i = 0; i < titleOptions.length; i++) {
+        if (titleOptions[i].value === getQueryParam('title')) {
+          titleOptions[i].selected = true;
+          break;
+        }
+      }
+    } 
+   // Get the 'preferences' values (checkboxes to be checked)
+    let pref = getQueryParam('pref');
+    if (pref) {
+      // Remove brackets and split into an array
+      pref = pref.replace(/[\[\]']+/g, '').split(',');
+
+      // Iterate over the checkboxes and check if their values are in the preferences array
+      document.querySelectorAll('input[type="checkbox"][name^="preferences"]').forEach(function(checkbox) {
+        if (pref.includes(checkbox.value)) {
+          checkbox.checked = true;
+          // Simulate the click on the parent div which may be necessary for CSS styling
+          checkbox.closest('.preference-item-outer').click();
+        }
+      });}
+  
+</script>
 <script>
 var moe_s = '.moe-anti-flicker-style { opacity:0 !important;filter:alpha(opacity=0) !important;background:none!important;} '; 
 (function (a, s, y, n, c, h, i, d, e) { h = (typeof h !== 'undefined') ? h : {}; var el = document.createElement('style'); el.type = 'text/css'; el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s)); document.getElementsByTagName("head")[0].appendChild(el); s.className += ' ' + y; h.start = 1 * new Date; h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') }; (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;})(window, document.documentElement, 'moe-anti-flicker-style', 'dataLayer', MAX_RENDER_TIME = 1500);
