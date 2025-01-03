@@ -1,261 +1,265 @@
-<!DOCTYPE html>
-<html lang="en">
+< !DOCTYPE html>
+  <html lang="en">
 
-<head>
- <script> // Read UTM Params
-  // Function to get the value of a URL parameter by name
-function getQueryParam(name) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name);
-}
-
-   // Assign the parameters to the form fields
-    if (getQueryParam('user-email')) {
-      document.getElementById('user-email').textContent = getQueryParam('user-email');
-    }
-	if (getQueryParam('birthday')) {
-      document.getElementById('birthday').value = getQueryParam('birthday');
-    }
-    if (getQueryParam('firstName')) {
-      document.getElementById('firstName').value = getQueryParam('firstName');
-    }
-    if (getQueryParam('lastName')) {
-      document.getElementById('lastName').value = getQueryParam('lastName');
-    }
-    if (getQueryParam('title')) {
-      // Find the option that matches the 'title' parameter and select it
-      var titleOptions = document.getElementById('title').options;
-      for (var i = 0; i < titleOptions.length; i++) {
-        if (titleOptions[i].value === getQueryParam('title')) {
-          titleOptions[i].selected = true;
-          break;
+  <head>
+    <script> // Read UTM Params
+      // Function to get the value of a URL parameter by name
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+      if (getQueryParam('id')) {
+        Moengage.add_unique_user_id(id)
+      }
+      // Assign the parameters to the form fields
+      if (getQueryParam('user-email')) {
+        document.getElementById('user-email').textContent = getQueryParam('user-email');
+      }
+      if (getQueryParam('birthday')) {
+        document.getElementById('birthday').value = getQueryParam('birthday');
+      }
+      if (getQueryParam('firstName')) {
+        document.getElementById('firstName').value = getQueryParam('firstName');
+      }
+      if (getQueryParam('lastName')) {
+        document.getElementById('lastName').value = getQueryParam('lastName');
+      }
+      if (getQueryParam('title')) {
+        // Find the option that matches the 'title' parameter and select it
+        var titleOptions = document.getElementById('title').options;
+        for (var i = 0; i < titleOptions.length; i++) {
+          if (titleOptions[i].value === getQueryParam('title')) {
+            titleOptions[i].selected = true;
+            break;
+          }
         }
       }
-    } 
-   // Get the 'preferences' values (checkboxes to be checked)
-    let pref = getQueryParam('pref');
-    if (pref) {
-      // Remove brackets and split into an array
-      pref = pref.replace(/[\[\]']+/g, '').split(',');
+      // Get the 'preferences' values (checkboxes to be checked)
+      let pref = getQueryParam('pref');
+      if (pref) {
+        // Remove brackets and split into an array
+        pref = pref.replace(/[\[\]']+/g, '').split(',');
 
-      // Iterate over the checkboxes and check if their values are in the preferences array
-      document.querySelectorAll('input[type="checkbox"][name^="preferences"]').forEach(function(checkbox) {
-        if (pref.includes(checkbox.value)) {
-          checkbox.checked = true;
-          // Simulate the click on the parent div which may be necessary for CSS styling
-          checkbox.closest('.preference-item-outer').click();
-        }
-      });}
-  
-</script>
-<script>
-var moe_s = '.moe-anti-flicker-style { opacity:0 !important;filter:alpha(opacity=0) !important;background:none!important;} '; 
-(function (a, s, y, n, c, h, i, d, e) { h = (typeof h !== 'undefined') ? h : {}; var el = document.createElement('style'); el.type = 'text/css'; el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s)); document.getElementsByTagName("head")[0].appendChild(el); s.className += ' ' + y; h.start = 1 * new Date; h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') }; (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;})(window, document.documentElement, 'moe-anti-flicker-style', 'dataLayer', MAX_RENDER_TIME = 1500);
-</script> 
-<link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
-<link rel="dns-prefetch" href="https://cdn.moengage.com/" /> 
-<link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin />
- <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" /> 
-<script src="https://cdn.moengage.com/release/dc_1/moe_webSdk_webp.min.latest.js?app_id=DMQ61NVM1B2JEK8USBS1H1CO"></script> 
-  <title>MoEngage Sample</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        // Iterate over the checkboxes and check if their values are in the preferences array
+        document.querySelectorAll('input[type="checkbox"][name^="preferences"]').forEach(function (checkbox) {
+          if (pref.includes(checkbox.value)) {
+            checkbox.checked = true;
+            // Simulate the click on the parent div which may be necessary for CSS styling
+            checkbox.closest('.preference-item-outer').click();
+          }
+        });
+      }
+
+    </script>
+    <script>
+      var moe_s = '.moe-anti-flicker-style {opacity:0 !important;filter:alpha(opacity=0) !important;background:none!important;} ';
+      (function (a, s, y, n, c, h, i, d, e) { h = (typeof h !== 'undefined') ? h : {}; var el = document.createElement('style'); el.type = 'text/css'; el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s)); document.getElementsByTagName("head")[0].appendChild(el); s.className += ' ' + y; h.start = 1 * new Date; h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') }; (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c; })(window, document.documentElement, 'moe-anti-flicker-style', 'dataLayer', MAX_RENDER_TIME = 1500);
+    </script>
+    <link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.moengage.com/" />
+    <link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin />
+    <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" />
+    <script
+      src="https://cdn.moengage.com/release/dc_1/moe_webSdk_webp.min.latest.js?app_id=DMQ61NVM1B2JEK8USBS1H1CO"></script>
+    <title>MoEngage Sample</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
-  <script type="text/javascript">
-        (function (i, s, o, g, r, a, m, n) {
-      i.moengage_object = r;
-      t = {};
-      q = function (f) {
-        return function () {
-          (i.moengage_q = i.moengage_q || []).push({
-            f: f,
-            a: arguments
+    <script type="text/javascript">
+      (function (i, s, o, g, r, a, m, n) {
+        i.moengage_object = r;
+        t = {};
+        q = function (f) {
+          return function () {
+            (i.moengage_q = i.moengage_q || []).push({
+              f: f,
+              a: arguments
+            });
+          };
+        };
+        (f = [
+          "track_event",
+          "add_user_attribute",
+          "add_first_name",
+          "add_last_name",
+          "add_email",
+          "add_mobile",
+          "add_user_name",
+          "add_gender",
+          "add_birthday",
+          "destroy_session",
+          "add_unique_user_id",
+          "moe_events",
+          "call_web_push",
+          "track",
+          "location_type_attribute",
+        ]),
+          (h = {
+            onsite: ["getData", "registerCallback"]
           });
-        };
-      };
-      (f = [
-        "track_event",
-        "add_user_attribute",
-        "add_first_name",
-        "add_last_name",
-        "add_email",
-        "add_mobile",
-        "add_user_name",
-        "add_gender",
-        "add_birthday",
-        "destroy_session",
-        "add_unique_user_id",
-        "moe_events",
-        "call_web_push",
-        "track",
-        "location_type_attribute",
-      ]),
-      (h = {
-        onsite: ["getData", "registerCallback"]
-      });
-      for (k in f) {
-        t[f[k]] = q(f[k]);
-      }
-      for (k in h)
-        for (l in h[k]) {
-          null == t[k] && (t[k] = {}), (t[k][h[k][l]] = q(k + "." + h[k][l]));
+        for (k in f) {
+          t[f[k]] = q(f[k]);
         }
-      a = s.createElement(o);
-      m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m);
-      i.moe =
-        i.moe ||
-        function () {
-          n = arguments[0];
-          return t;
+        for (k in h)
+          for (l in h[k]) {
+            null == t[k] && (t[k] = {}), (t[k][h[k][l]] = q(k + "." + h[k][l]));
+          }
+        a = s.createElement(o);
+        m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+        i.moe =
+          i.moe ||
+          function () {
+            n = arguments[0];
+            return t;
+          };
+        a.onload = function () {
+          if (n) {
+            i[r] = moe(n);
+          }
         };
-      a.onload = function () {
-        if (n) {
-          i[r] = moe(n);
-        }
-      };
-    })(
-      window,
-      document,
-      "script",
-      "https://cdn.moengage.com/webpush/moe_webSdk.min.latest.js",
-      "Moengage"
-    );
+      })(
+        window,
+        document,
+        "script",
+        "https://cdn.moengage.com/webpush/moe_webSdk.min.latest.js",
+        "Moengage"
+      );
 
-    Moengage = moe({
-      app_id: "DMQ61NVM1B2JEK8USBS1H1CO",
-      debug_logs: 0,
-      cards: {
-        enable: true,
-        placeholder: '#inbox', 
-        backgroundColor: '#454545', 
-        overLayColor: 'rgba(0, 0, 0, 0.8)',
-        ctaTextColor: '#06A6B7',
-        cardDismissColor: '#db2828', // any valid CSS color format
-        optionButtonColor: '#C4C4C4', // any valid CSS color format
-        dateTimeColor: '#8E8E8E', // any valid CSS color format
-        unclickedIndicatorColor: 'blue', // any valid CSS color format
-        pinIcon: 'https://app-cdn.moengage.com/sdk/pin-icon.svg', // absolute path to the icon image.
-        refreshIcon: 'https://app-cdn.moengage.com/sdk/refresh-icon.svg', // absolute path to the icon image.
-        navigationBar: {
+      Moengage = moe({
+        app_id: "DMQ61NVM1B2JEK8USBS1H1CO",
+        debug_logs: 0,
+        cards: {
+          enable: true,
+          placeholder: '#inbox',
+          backgroundColor: '#454545',
+          overLayColor: 'rgba(0, 0, 0, 0.8)',
+          ctaTextColor: '#06A6B7',
+          cardDismissColor: '#db2828', // any valid CSS color format
+          optionButtonColor: '#C4C4C4', // any valid CSS color format
+          dateTimeColor: '#8E8E8E', // any valid CSS color format
+          unclickedIndicatorColor: 'blue', // any valid CSS color format
+          pinIcon: 'https://app-cdn.moengage.com/sdk/pin-icon.svg', // absolute path to the icon image.
+          refreshIcon: 'https://app-cdn.moengage.com/sdk/refresh-icon.svg', // absolute path to the icon image.
+          navigationBar: {
             backgroundColor: '#00237C', // any valid CSS color format
             text: 'Notifications', // string. eg, Notifications
             color: '#fff', // any valid CSS color format
             fontSize: '16px', // any valid CSS size format
             fontFamily: '', // any font family which is added to the website
-        },
-        closeButton: {
+          },
+          closeButton: {
             webIcon: 'https://app-cdn.moengage.com/sdk/cross-icon.svg',
             mWebIcon: 'https://app-cdn.moengage.com/sdk/cross-icon.svg',
-        },
-        tab: {
+          },
+          tab: {
             active: {
-                color: '#06A6B7',
-                underlineColor: '#06A6B7',
+              color: '#06A6B7',
+              underlineColor: '#06A6B7',
             },
             inactiveTabColor: '#7C7C7C',
             fontSize: '14px', // any valid CSS size format
             fontFamily: '', // any font family which is added to the website
             backgroundColor: '#fff', // any valid CSS color format
-        },
-        floating: {
+          },
+          floating: {
             enable: false, // false by default
             icon: 'https://app-cdn.moengage.com/sdk/bell-icon.svg', // absolute path to the icon image. by default, our icon will be used.
             postion: '0px 10px 40px 0', // need all 4 offset in proper CSS format in the order of top, right, bottom, left.
             countBackgroundColor: '#FF5A5F',
             countColor: '#FFF',
-        },
-        noDataContent: {
+          },
+          noDataContent: {
             img: `https://app-cdn.moengage.com/sdk/cards-no-result.svg`,
             text: `No notifications to show, check again later.`,
+          }
         }
-    }
-    });
-    
-  </script>
+      });
 
-<!-- // Batch SDK setup 
-<script type="text/javascript">
-(function(b,a,t,c,h,e,r){h='batchSDK';b[h]=b[h]||function() {
-  (b[h].q=b[h].q||[]).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
+    </script>
+
+    <!-- // Batch SDK setup
+      <script type="text/javascript">
+        (function(b,a,t,c,h,e,r){h = 'batchSDK';b[h]=b[h]||function() {
+          (b[h].q = b[h].q || []).push(arguments)};e=a.createElement(t),r=a.getElementsByTagName(t)[0];
   e.async=1;e.src=c;r.parentNode.insertBefore(e,r);})(window,document,'script','https://via.batch.com/v4/bootstrap.min.js');
-    
-  var batchSDKUIConfig = { // refer to the documentation to learn more https://batch.com/doc/web/ui-components.html
-    native: {}
+
+        var batchSDKUIConfig = { // refer to the documentation to learn more https://batch.com/doc/web/ui-components.html
+          native: { }
   }
- // Firefox and Safari specific configuration
-  if ((navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1) &&
-navigator.userAgent.indexOf("Chrome") === -1))  {
-    batchSDKUIConfig = {
-      alert: {
-        text: 'Subscribe to push notifications', //TODO 🔶 [1] Update to contextualize subscription request 
-        positiveBtnStyle: {
-          "backgroundColor":'[COLOR IN HEXADECIMAL]',// TODO 🔶 [2] update backgroundColor value
-          "hoverBackgroundColor": '[COLOR IN HEXADECIMAL]'// TODO 🔶 [3] update hoverBackgroundColor value
-          },
-          positiveSubBtnLabel: 'I subscribe!',// TODO 🔶 [4] update positiveSubBtnLabel value
-          negativeBtnLabel: 'No, thanks'// TODO 🔶 [5] update negativeBtnLabel value
-          }  
-      }
-  }
+        // Firefox and Safari specific configuration
+        if ((navigator.userAgent.indexOf("Firefox") !== -1 || (navigator.userAgent.indexOf("Safari") !== -1) &&
+        navigator.userAgent.indexOf("Chrome") === -1))  {
+          batchSDKUIConfig = {
+            alert: {
+              text: 'Subscribe to push notifications', //TODO 🔶 [1] Update to contextualize subscription request 
+              positiveBtnStyle: {
+                "backgroundColor": '[COLOR IN HEXADECIMAL]',// TODO 🔶 [2] update backgroundColor value
+                "hoverBackgroundColor": '[COLOR IN HEXADECIMAL]'// TODO 🔶 [3] update hoverBackgroundColor value
+              },
+              positiveSubBtnLabel: 'I subscribe!',// TODO 🔶 [4] update positiveSubBtnLabel value
+              negativeBtnLabel: 'No, thanks'// TODO 🔶 [5] update negativeBtnLabel value
+            }
+          }
+        }
   // end Firefox and Safari specific configuration
-  batchSDK('setup', {
-   apiKey: '914365FD444E46409B106957E00D982E',
-    subdomain: 'github9',
-    authKey: '2.sX1dpHD2Wx0KuRraQKiBWeDGJiuab+a8+ZaU+AnDiSY=',
-    vapidPublicKey: 'BGfaYJWbSLunJGqlmuRqLBQfyxhC4ciTmaHecXiGh1ncq3tnFJGcOMN8/JrtscHC29IprjLfeqoZDb8kMj4SqY0=',
-    ui: batchSDKUIConfig,
+        batchSDK('setup', {
+          apiKey: '914365FD444E46409B106957E00D982E',
+        subdomain: 'github9',
+        authKey: '2.sX1dpHD2Wx0KuRraQKiBWeDGJiuab+a8+ZaU+AnDiSY=',
+        vapidPublicKey: 'BGfaYJWbSLunJGqlmuRqLBQfyxhC4ciTmaHecXiGh1ncq3tnFJGcOMN8/JrtscHC29IprjLfeqoZDb8kMj4SqY0=',
+        ui: batchSDKUIConfig,
     // Add the generated Safari object here if applicable
   });
 
 batchSDK(api => {
-  api.profile().then(profile => {
-    profile.identify({customId: "my_custom_user_id"});
-  });
+          api.profile().then(profile => {
+            profile.identify({ customId: "my_custom_user_id" });
+          });
 });
-</script>  
+      </script>  
 
  -->
 
-</head>
+  </head>
 
-<body>
-  <!--<script>
+  <body>
+    <!--<script>
         Moengage.onsite.registerCallback("hari1", function (err, data) {
       if (err) {return console.error('Error from moengage:', err);}
-      console.log('Data for campaign:', data);
+        console.log('Data for campaign:', data);
 
-      var payload = data.payload; 
-      document.querySelector('#image1').src = payload.img
-      document.querySelector('#title1').textContent = payload.text
-      var impTracker = data.imp; // Function, you can call impTracker() to send impression stats for a campaign back to MoEngage. Call this after you have successfully rendered the HTML as per the payload provided.
-      impTracker()
-      var clickTracker = data.click({
-        widget_id: "sample_widget_id"
+        var payload = data.payload;
+        document.querySelector('#image1').src = payload.img
+        document.querySelector('#title1').textContent = payload.text
+        var impTracker = data.imp; // Function, you can call impTracker() to send impression stats for a campaign back to MoEngage. Call this after you have successfully rendered the HTML as per the payload provided.
+        impTracker()
+        var clickTracker = data.click({
+          widget_id: "sample_widget_id"
       }); // Function, you can call clickTracker() to send click stats for a campaign back to MoEngage. Call this when the user clicks on the desired section of the website. Passing widget_id is not mandatory and should only be used in case you want to differentiate the clicks between 2 different widgets of the Web Personalization Campaign.
     });
 
 
-  </script> -->
- <div>
-  <form action="/submit_form" method="post">
-  <label for="name">Name:</label><br>
-  <input type="text" id="name" name="name" required><br>
-  
-  <label for="email">Email:</label><br>
-  <input type="email" id="email" name="email" required><br>
-  
-  <label for="message">Message:</label><br>
-  <textarea id="message" name="message" required></textarea><br>
-  
-  <input type="submit" value="Submit">
-</form> 
- </div>
-</body>
+      </script> -->
+    <div>
+      <form action="/submit_form" method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
 
-</html>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" required></textarea><br>
+
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+  </body>
+
+  </html>
