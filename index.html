@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-<!--   	<script> -->
-<!-- var moe_s = '.moe-anti-flicker-style { opacity:0 !important;filter:alpha(opacity=0) !important;background:none!important;} '; -->
-<!-- (function (a, s, y, n, c, h, i, d, e) { h = (typeof h !== 'undefined') ? h : {}; var el = document.createElement('style'); el.type = 'text/css'; el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s)); document.getElementsByTagName("head")[0].appendChild(el); s.className += ' ' + y; h.start = 1 * new Date; h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') }; (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;})(window, document.documentElement, 'moe-anti-flicker-style', 'dataLayer', MAX_RENDER_TIME = 1500); -->
-<!-- </script> -->
-<!--   	<link rel="preconnect" href="https://cdn.moengage.com/" crossorigin /> -->
-<!-- <link rel="dns-prefetch" href="https://cdn.moengage.com/" /> -->
-<!-- <link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin /> -->
-<!-- <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" /> -->
-<!--   	<script src="https://cdn.moengage.com/release/dc_1/moe_webSdk_webp.min.latest.js?app_id=DMQ61NVM1B2JEK8USBS1H1CO"></script> -->
+<script>
+var moe_s = '.moe-anti-flicker-style { opacity:0 !important;filter:alpha(opacity=0) !important;background:none!important;} '; 
+(function (a, s, y, n, c, h, i, d, e) { h = (typeof h !== 'undefined') ? h : {}; var el = document.createElement('style'); el.type = 'text/css'; el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s)); document.getElementsByTagName("head")[0].appendChild(el); s.className += ' ' + y; h.start = 1 * new Date; h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') }; (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;})(window, document.documentElement, 'moe-anti-flicker-style', 'dataLayer', MAX_RENDER_TIME = 1500);
+</script> 
+<link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
+<link rel="dns-prefetch" href="https://cdn.moengage.com/" /> 
+<link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin />
+ <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" /> 
+<script src="https://cdn.moengage.com/release/dc_1/moe_webSdk_webp.min.latest.js?app_id=DMQ61NVM1B2JEK8USBS1H1CO"></script> 
   <title>MoEngage Sample</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -179,7 +179,7 @@ batchSDK(api => {
 </head>
 
 <body>
-  <script>
+  <!--<script>
         Moengage.onsite.registerCallback("hari1", function (err, data) {
       if (err) {return console.error('Error from moengage:', err);}
       console.log('Data for campaign:', data);
@@ -195,7 +195,19 @@ batchSDK(api => {
     });
 
 
-  </script>
+  </script> -->
+  <form action="/submit_form" method="post">
+  <label for="name">Name:</label><br>
+  <input type="text" id="name" name="name" required><br>
+  
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email" required><br>
+  
+  <label for="message">Message:</label><br>
+  <textarea id="message" name="message" required></textarea><br>
+  
+  <input type="submit" value="Submit">
+</form> 
   <div class="container" id="test">
     <h2 id = "inbox">Carousel </h2>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
