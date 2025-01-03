@@ -77,7 +77,7 @@ batchSDK(api => {
         return urlParams.get(name);
       }
       if (getQueryParam('id')) {
-        Moengage.add_unique_user_id(id)
+        Moengage.add_unique_user_id(getQueryParam('id'))
       }
       // Assign the parameters to the form fields
       if (getQueryParam('user-email')) {
