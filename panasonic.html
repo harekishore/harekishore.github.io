@@ -588,7 +588,8 @@
     disable_web_push: true,
     swPath:          "/serviceworker.js",
     swScope:         "/",
-    disableSdk:      !cookieConsent      // ← key logic: disabled if no marketing consent
+    disableSdk:      !cookieConsent,      // ← key logic: disabled if no marketing consent
+    disable_onsite: false
   });
 
   /* ── enableMoSdk: called when BOTH consent AND SDK are ready ── */
