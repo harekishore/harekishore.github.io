@@ -713,47 +713,21 @@
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
   /* ── handleNotifyMeClick (V2 behaviour) ──────────────────────────
-     1. Enable SDK in-place so MoEngage fetches & caches campaigns.
-     2. Once campaigns are ready (onsite.registerCallback), reload.
-        On the reloaded page the SDK starts enabled, campaigns are
-        served from cache, and the on-load OSM fires immediately.
-     3. Safety fallback: reload after 3 s if callback never fires
-        (e.g. no matching campaign, or API unavailable).
+     1. Set sessionStorage flag so the next page load knows to trigger
+        exit intent after the SDK initialises with disableSdk:false.
+     2. Visual feedback on the button while the reload is in flight.
+     3. Reload the page.
      ─────────────────────────────────────────────────────────────── */
   function handleNotifyMeClick() {
     var btn = document.getElementById("openNotifyBtn");
-    btn.innerHTML = '⏳ Loading…';
+    btn.textContent = "Loading…";
     btn.disabled = true;
 
-    var reloaded = false;
-    function doReload() {
-      if (reloaded) return;
-      reloaded = true;
-      sessionStorage.setItem('moe_notify_intent', '1');
-      console.log("[V2] Reloading — campaigns cached, OSM will fire on load.");
-      location.reload();
-    }
+    sessionStorage.setItem('moe_notify_intent', '1');
+    console.log("[V2] Notify intent flag set. Reloading page to enable SDK…");
 
-    /* Enable SDK so it fetches campaigns and populates its cache */
-    Moengage.enableSdk().then(function() {
-      console.log("[V2] SDK enabled. Waiting for campaigns…");
-
-      /* Primary signal: MoEngage fires this when onsite data is ready */
-      try {
-        Moengage.onsite.registerCallback(function(data) {
-          console.log("[V2] onsite.registerCallback — campaigns fetched. Reloading.");
-          doReload();
-        });
-      } catch (e) {
-        console.warn("[V2] onsite.registerCallback unavailable:", e);
-      }
-
-      /* Fallback: reload after 3 s regardless */
-      setTimeout(doReload, 3000);
-    }).catch(function(e) {
-      console.warn("[V2] enableSdk() failed:", e);
-      doReload(); /* still reload so we don't leave the button stuck */
-    });
+    /* Small delay so the button state is visible before reload */
+    setTimeout(function() { location.reload(); }, 300);
   }
 
   /* ── Thumbnail switcher ───────────────────────────────────────── */
