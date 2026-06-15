@@ -375,7 +375,7 @@
       <button class="btn btn-primary" disabled style="opacity:.45;cursor:not-allowed;">
         Add to Cart
       </button>
-      <button class="btn btn-notify" id="openNotifyBtn" onclick="openNotifyModal()">
+      <button class="btn btn-notify" id="openNotifyBtn" onclick="handleNotifyMeClick()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -717,6 +717,41 @@
      NOTIFY ME LOGIC
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
+  function triggerSyntheticExitIntent() {
+    var exitIntentEvent = new MouseEvent("mouseout", {
+      bubbles: true,
+      cancelable: true,
+      clientX: 0,
+      clientY: 0,
+      relatedTarget: null
+    });
+
+    try { document.dispatchEvent(exitIntentEvent); } catch (e) {}
+    try { window.dispatchEvent(exitIntentEvent); } catch (e) {}
+  }
+
+  function handleNotifyMeClick() {
+    try {
+      if (Moengage && cookieConsent) {
+        Moengage.track_event("notify_me_cta_clicked", {
+          "product_id":   "DC-L10E-N",
+          "product_name": "LUMIX L10 – Titanium Gold Edition",
+          "button_text":  "Notify Me When Available",
+          "locale":       "it_IT"
+        });
+        console.log("[MoEngage] notify_me_cta_clicked tracked.");
+      }
+    } catch (e) {
+      console.warn("[MoEngage] Could not track notify_me_cta_clicked:", e);
+    }
+
+    /* Best-effort synthetic exit-intent trigger for onsite tools listening to mouseout. */
+    triggerSyntheticExitIntent();
+
+    /* Keep existing product flow. Remove this if the MoEngage campaign should replace the native modal. */
+    openNotifyModal();
+  }
+
   function openNotifyModal() {
     document.getElementById("notify-overlay").style.display = "flex";
     document.getElementById("notify-email").focus();
