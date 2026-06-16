@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMIX L10 – Titanium Gold Edition | Panasonic E-Shop [V3]</title>
+
+  <!-- MoEngage SDK preconnect (mirrors original) -->
+  <link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.moengage.com/" />
+  <link rel="preconnect" href="https://sdk-02.moengage.com/" crossorigin />
+  <link rel="dns-prefetch" href="https://sdk-02.moengage.com/" />
+
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ────────────────────────────────────────────────────── */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo {
+      font-size: 22px; font-weight: 700; letter-spacing: 2px;
+      color: #003087;
+    }
+    .logo span { color: #0060df; }
+    nav a {
+      margin-left: 24px; font-size: 13px; color: #444;
+      transition: color .2s;
+    }
+    nav a:hover { color: #0060df; }
+
+    /* ── Breadcrumb ─────────────────────────────────────────────────── */
+    .breadcrumb {
+      background: #fff; padding: 10px 40px;
+      font-size: 12px; color: #888; border-bottom: 1px solid #eee;
+    }
+    .breadcrumb span { margin: 0 6px; }
+
+    /* ── Product Layout ─────────────────────────────────────────────── */
+    .product-page {
+      max-width: 1100px;
+      margin: 36px auto;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 8px rgba(0,0,0,.07);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    /* ── Gallery ────────────────────────────────────────────────────── */
+    .gallery {
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      border-right: 1px solid #eee;
+    }
+    .main-image img {
+      width: 100%; max-width: 400px;
+      object-fit: contain;
+    }
+    .thumbnails {
+      display: flex; gap: 10px; margin-top: 20px;
+    }
+    .thumbnails img {
+      width: 64px; height: 64px;
+      object-fit: cover;
+      border: 2px solid #e0e0e0;
+      border-radius: 4px; cursor: pointer;
+      transition: border-color .2s;
+    }
+    .thumbnails img:hover, .thumbnails img.active { border-color: #003087; }
+    .badge-gold {
+      background: linear-gradient(135deg, #c9a227, #e8c94b);
+      color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px;
+      margin-top: 18px; letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ── Info Panel ─────────────────────────────────────────────────── */
+    .info {
+      padding: 40px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .info .sku { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+    .info h1 {
+      font-size: 22px; font-weight: 700; line-height: 1.3; color: #111;
+    }
+    .info .subtitle { font-size: 13px; color: #666; line-height: 1.6; }
+    .info .rating { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; }
+    .stars { color: #c9a227; font-size: 15px; }
+
+    .price-block { margin-top: 8px; }
+    .price-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+    .price {
+      font-size: 36px; font-weight: 700; color: #003087;
+      display: flex; align-items: flex-start; gap: 4px;
+    }
+    .price sup { font-size: 18px; margin-top: 6px; }
+    .price-note { font-size: 11px; color: #999; margin-top: 2px; }
+
+    .stock-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff3cd; color: #856404;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 4px;
+      border: 1px solid #ffc107;
+    }
+    .stock-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #ffc107; }
+
+    /* ── Buttons ────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px;
+      padding: 14px 28px; border-radius: 4px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      border: none; transition: all .2s; width: 100%;
+    }
+    .btn-primary {
+      background: #003087; color: #fff;
+    }
+    .btn-primary:hover { background: #001f5b; }
+    .btn-notify {
+      background: transparent; color: #003087;
+      border: 2px solid #003087;
+    }
+    .btn-notify:hover { background: #003087; color: #fff; }
+    .btn-notify svg { width: 18px; height: 18px; }
+
+    .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+
+    .features {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; margin-top: 4px;
+    }
+    .feature {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: #555;
+    }
+    .feature-icon { font-size: 16px; flex-shrink: 0; }
+    .divider { border: none; border-top: 1px solid #eee; }
+
+    /* ── SDK Status Panel (debug helper) ───────────────────────────── */
+    .sdk-status {
+      position: fixed; bottom: 20px; right: 20px;
+      background: #1a1a2e; color: #e0e0e0;
+      border-radius: 8px; padding: 14px 18px;
+      font-size: 12px; min-width: 240px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+      z-index: 9000;
+    }
+    .sdk-status h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+    .sdk-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .sdk-row .label { color: #aaa; }
+    .sdk-row .val { font-weight: 600; }
+    .val.yes { color: #4caf50; }
+    .val.no  { color: #f44336; }
+    .val.pending { color: #ff9800; }
+
+    /* ── Cookie Consent Banner ──────────────────────────────────────── */
+    #cookie-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 10000;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 20px;
+    }
+    #cookie-banner {
+      background: #fff;
+      border-radius: 8px 8px 8px 8px;
+      max-width: 960px; width: 100%;
+      padding: 28px 32px;
+      box-shadow: 0 -4px 30px rgba(0,0,0,.15);
+    }
+    .cookie-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .cookie-header img { width: 32px; }
+    .cookie-header h2 { font-size: 17px; font-weight: 700; }
+    .cookie-body { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 20px; }
+    .cookie-body a { color: #003087; text-decoration: underline; }
+    .cookie-toggle-section { margin-bottom: 16px; }
+    .cookie-toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .cookie-toggle-row:last-child { border-bottom: none; }
+    .cookie-toggle-info h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .cookie-toggle-info p { font-size: 12px; color: #777; }
+    /* Toggle switch */
+    .toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: #ccc; border-radius: 24px; transition: .3s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; left: 3px; bottom: 3px;
+      background: #fff; border-radius: 50%; transition: .3s;
+    }
+    .toggle input:checked + .toggle-slider { background: #003087; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+    .toggle input:disabled + .toggle-slider { opacity: .6; cursor: not-allowed; }
+
+    .cookie-actions {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .cookie-btn {
+      padding: 10px 22px; border-radius: 4px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      border: none; transition: all .2s;
+    }
+    .cookie-btn-accept-all { background: #003087; color: #fff; }
+    .cookie-btn-accept-all:hover { background: #001f5b; }
+    .cookie-btn-reject    { background: transparent; color: #555; border: 1px solid #ccc; }
+    .cookie-btn-reject:hover { background: #f5f5f5; }
+    .cookie-btn-save      { background: transparent; color: #003087; border: 1px solid #003087; }
+    .cookie-btn-save:hover { background: #003087; color: #fff; }
+
+    /* ── Notify Me Modal ────────────────────────────────────────────── */
+    #notify-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    #notify-modal {
+      background: #fff;
+      border-radius: 8px;
+      max-width: 440px; width: 100%;
+      padding: 32px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.2);
+    }
+    #notify-modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    #notify-modal p  { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.5; }
+    .notify-form { display: flex; flex-direction: column; gap: 12px; }
+    .notify-form input {
+      border: 1px solid #ddd; border-radius: 4px;
+      padding: 12px 14px; font-size: 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .notify-form input:focus { border-color: #003087; }
+    .notify-form .input-group { position: relative; }
+    .notify-form label { font-size: 12px; color: #666; margin-bottom: 2px; display: block; }
+    .notify-success {
+      display: none;
+      text-align: center; padding: 20px 0;
+    }
+    .notify-success .check { font-size: 48px; margin-bottom: 12px; }
+    .notify-success h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .notify-success p { font-size: 13px; color: #666; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 22px;
+      cursor: pointer; color: #999; line-height: 1;
+    }
+    .modal-close:hover { color: #333; }
+    #notify-modal { position: relative; }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 32px; font-size: 12px; color: #aaa;
+      margin-top: 60px;
+    }
+    footer a { color: #003087; text-decoration: underline; }
+
+    /* ── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .product-page { grid-template-columns: 1fr; }
+      .info { padding: 24px; }
+      .gallery { border-right: none; border-bottom: 1px solid #eee; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
+<header>
+  <div class="logo">PANA<span>SONIC</span></div>
+  <nav>
+    <a href="#">Cameras</a>
+    <a href="#">TV &amp; Audio</a>
+    <a href="#">Home</a>
+    <a href="#">Support</a>
+  </nav>
+</header>
+
+<!-- ═══ BREADCRUMB ═══════════════════════════════════════════════════ -->
+<div class="breadcrumb">
+  Home <span>›</span> Cameras &amp; Camcorders <span>›</span>
+  Bridge &amp; Compact Cameras <span>›</span>
+  <strong>LUMIX L10 – Titanium Gold Edition</strong>
+</div>
+
+<!-- ═══ PRODUCT PAGE ═════════════════════════════════════════════════ -->
+<div class="product-page">
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <div class="main-image" id="mainImageWrap">
+      <img
+        id="mainImg"
+        src="https://d3ldxf75ean4pg.cloudfront.net/catalog/product/cache/87b75057313c9710bd0f317041da72bb/d/c/dc-l10e-n.main.png"
+        alt="LUMIX L10 Titanium Gold"
+      />
+    </div>
+    <div class="thumbnails">
+      <img class="active"
+        src="https://d3ldxf75ean4pg.cloudfront.net/catalog/product/cache/87b75057313c9710bd0f317041da72bb/d/c/dc-l10e-n.main.png"
+        onclick="setMain(this)" alt="Vista 1" />
+      <img
+        src="https://d3ldxf75ean4pg.cloudfront.net/catalog/product/cache/87b75057313c9710bd0f317041da72bb/d/c/dc-l10e-n.pt07.png"
+        onclick="setMain(this)" alt="Vista 2" />
+      <img
+        src="https://d3ldxf75ean4pg.cloudfront.net/catalog/product/cache/87b75057313c9710bd0f317041da72bb/d/c/dc-l10e-n.pt01.png"
+        onclick="setMain(this)" alt="Vista 3" />
+    </div>
+    <div class="badge-gold">✦ 25th Anniversary Edition</div>
+  </div>
+
+  <!-- Info -->
+  <div class="info">
+    <div class="sku">SKU: DC-L10E-N</div>
+    <h1>LUMIX L10 Compact Camera<br>– Leica 24–75 mm F1.7–2.8 Lens,<br>Titanium Gold Edition</h1>
+    <p class="subtitle">
+      Iconic limited-edition Titanium Gold design. Leica DC Vario-Summilux lens
+      with maximum aperture F1.7–2.8. 20 MP sensor with AI face recognition.
+    </p>
+
+    <div class="rating">
+      <span class="stars">★★★★★</span>
+      <span>4.8 (126 reviews)</span>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="price-block">
+      <div class="price-label">Recommended Price</div>
+      <div class="price"><sup>€</sup>1,599<sup style="font-size:14px;margin-top:10px">.00</sup></div>
+      <div class="price-note">VAT included · Free shipping</div>
+    </div>
+
+    <div class="stock-badge">
+      <div class="dot"></div>
+      Coming soon – notify me
+    </div>
+
+    <div class="features">
+      <div class="feature"><span class="feature-icon">📷</span><span>20 MP MOS Sensor</span></div>
+      <div class="feature"><span class="feature-icon">🔍</span><span>3× Leica Optical Zoom</span></div>
+      <div class="feature"><span class="feature-icon">🎥</span><span>4K 30p Video</span></div>
+      <div class="feature"><span class="feature-icon">📡</span><span>Wi-Fi + Bluetooth 5.0</span></div>
+      <div class="feature"><span class="feature-icon">🔋</span><span>380 shots per charge</span></div>
+      <div class="feature"><span class="feature-icon">🏆</span><span>Limited Gold Edition</span></div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="btn-group">
+      <button class="btn btn-primary" disabled style="opacity:.45;cursor:not-allowed;">
+        Add to Cart
+      </button>
+      <button class="btn btn-notify" id="openNotifyBtn" onclick="handleNotifyMeClick()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        Notify Me When Available
+      </button>
+    </div>
+  </div>
+
+</div><!-- /product-page -->
+
+<!-- ═══ COOKIE CONSENT BANNER ════════════════════════════════════════ -->
+<div id="cookie-overlay">
+  <div id="cookie-banner" role="dialog" aria-label="Consenso Cookie">
+    <div class="cookie-header">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" fill="#003087"/>
+        <text x="8" y="22" font-size="16" fill="white">🍪</text>
+      </svg>
+      <h2>We use cookies</h2>
+    </div>
+    <p class="cookie-body">
+      This site uses cookies to improve your experience, personalise content and ads,
+      and analyse traffic. Read our <a href="#">Cookie Policy</a> and
+      <a href="#">Privacy Policy</a> to learn more.
+    </p>
+
+    <div class="cookie-toggle-section">
+      <!-- Necessary (always on) -->
+      <div class="cookie-toggle-row">
+        <div class="cookie-toggle-info">
+          <h4>Necessary Cookies</h4>
+          <p>Essential for the site to function. Cannot be disabled.</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" checked disabled id="toggle-necessary" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Analytics -->
+      <div class="cookie-toggle-row">
+        <div class="cookie-toggle-info">
+          <h4>Analytics Cookies</h4>
+          <p>Help us understand how you use the site (e.g. Google Analytics).</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-analytics" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Marketing (controls MoEngage) -->
+      <div class="cookie-toggle-row">
+        <div class="cookie-toggle-info">
+          <h4>Marketing Cookies</h4>
+          <p>
+            Enable personalised campaigns and retargeting, including initialisation of
+            <strong>MoEngage SDK</strong>.
+          </p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-marketing" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="cookie-actions">
+      <button class="cookie-btn cookie-btn-accept-all" onclick="acceptAllCookies()">
+        Accept All
+      </button>
+      <button class="cookie-btn cookie-btn-save" onclick="savePreferences()">
+        Save Preferences
+      </button>
+      <button class="cookie-btn cookie-btn-reject" onclick="rejectAllCookies()">
+        Reject All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NOTIFY ME MODAL ══════════════════════════════════════════════
+     V2: Native modal intentionally removed.
+     The popup is owned entirely by MoEngage (exit-intent OSM campaign).
+     Flow: click Notify Me → reload with SDK enabled → MoEngage shows OSM.
+     ═════════════════════════════════════════════════════════════════ -->
+
+<!-- ═══ SDK STATUS DEBUG PANEL ══════════════════════════════════════ -->
+<div class="sdk-status" id="sdkPanel">
+  <h4>🔧 MoEngage SDK Status [V3]</h4>
+  <div class="sdk-row"><span class="label">Consent (marketing)</span><span class="val" id="status-consent">—</span></div>
+  <div class="sdk-row"><span class="label">Notify Opt-in</span><span class="val" id="status-notify-optin">—</span></div>
+  <div class="sdk-row"><span class="label">SDK Initialised</span><span class="val" id="status-init">—</span></div>
+  <div class="sdk-row"><span class="label">Data Tracking</span><span class="val" id="status-data-tracking">—</span></div>
+  <div class="sdk-row"><span class="label">App ID</span><span class="val" style="font-size:10px">TN9USB531HGK7M5A456FEAPK</span></div>
+</div>
+
+<footer>
+  © 2025 Panasonic Marketing Europe GmbH – All rights reserved ·
+  <a href="#">Privacy</a> · <a href="#">Cookie Policy</a>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MOENGAGE SDK INITIALISATION
+     Logic mirrors the production site (panasonic.html):
+       1. Read CookieConsent cookie → extract marketing:true/false
+       2. Init MoEngage with disableSdk: !cookieConsent
+       3. Listen to MOE_LIFECYCLE → SDK_INITIALIZED to set sdkInitialised flag
+       4. Listen to CookiebotOnConsentReady → update consent & call enableMoSdk()
+       5. enableMoSdk(): if both flags → call Moengage.enableSdk() + set attributes
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Config (matches production) ─────────────────────────────── */
+  var moeDataCenter  = "dc_1";
+  var moeAppID       = "2877NHMD0TOHATHC6NNHDERW";
+  var sdkVersion     = "2";
+
+  var sdkInitialised      = false;
+  var cookieConsent       = false;
+  var dataTrackingEnabled = false;
+
+  /* ── V3: Notify opt-in flag — set when user clicks Notify Me.
+     Persists across reload so applyDataTracking() keeps tracking
+     enabled even though the cookie consent is still "denied".   */
+  var notifyOptIn = sessionStorage.getItem('moe_notify_optin') === '1';
+
+  /* ── Read CookieConsent cookie (Cookiebot format)
+        Format: "stamp=...;necessary:true;marketing:true/false;..."
+     ─────────────────────────────────────────────────────────────── */
+  var consentCookieValue = document.cookie
+    .split("; ")
+    .find(function(row) { return row.startsWith("CookieConsent="); });
+
+  if (consentCookieValue) {
+    var marketingPart = consentCookieValue.split("marketing:")[1];
+    if (marketingPart && marketingPart.slice(0, 4).includes("true")) {
+      cookieConsent = true;
+    }
+  }
+
+  /* ── Load MoEngage SDK snippet ────────────────────────────────── */
+  !function(e,n,i,t,a,r,o,d){
+    if(!moeDataCenter||!moeDataCenter.match(/^dc_[0-9]+$/gm))
+      return console.error("Data center has not been passed correctly.");
+    var s=e[a]=e[a]||[];
+    if(s.invoked=0,s.initialised>0||s.invoked>0)
+      return console.error("MoEngage Web SDK initialised multiple times."),!1;
+    e.moengage_object=a;
+    var l={},g=function n(i){
+      return function(){
+        for(var n=arguments.length,t=Array(n),a=0;a<n;a++)t[a]=arguments[a];
+        (e.moengage_q=e.moengage_q||[]).push({f:i,a:t})
+      }
+    };
+    var u=["track_event","add_user_attribute","add_first_name","add_last_name",
+           "add_email","add_mobile","add_user_name","add_gender","add_birthday",
+           "destroy_session","add_unique_user_id","update_unique_user_id",
+           "moe_events","call_web_push","track","location_type_attribute",
+           "identifyUser","getUserIdentities"];
+    var m={onsite:["getData","registerCallback"]};
+    for(var c in u)l[u[c]]=g(u[c]);
+    for(var v in m)for(var f in m[v])
+      null==l[v]&&(l[v]={}),l[v][m[v][f]]=g(v+"."+m[v][f]);
+    r=n.createElement(i),o=n.getElementsByTagName("head")[0];
+    r.async=1;
+    r.src=t;
+    o.appendChild(r);
+    e.moe=e.moe||function(){
+      return(s.invoked=s.invoked+1,s.invoked>1)
+        ?(console.error("MoEngage Web SDK initialised multiple times."),!1)
+        :(d=arguments.length<=0?void 0:arguments[0],l)
+    };
+    r.addEventListener("load",function(){
+      if(d)return e[a]=e.moe(d),e[a].initialised=e[a].initialised+1||1,!0
+    });
+    r.addEventListener("error",function(){
+      return console.error("Moengage Web SDK loading failed."),!1
+    })
+  }(
+    window, document, "script",
+    "https://cdn.moengage.com/release/" + moeDataCenter + "/versions/" + sdkVersion + "/moe_webSdk.min.latest.js",
+    "Moengage"
+  );
+
+  /* ── V3: SDK always initialised — no disableSdk ──────────────────
+     Data tracking opt-out is handled separately via
+     disableDataTracking() / enableDataTracking() after SDK init.
+     This keeps OSMs and anonymous analytics running for all users
+     while blocking PII collection for non-consenting users.
+     ─────────────────────────────────────────────────────────────── */
+  Moengage = moe({
+    app_id:           moeAppID,
+    debug_logs:       1,
+    disable_web_push: true,
+    swPath:           "/serviceworker.js",
+    swScope:          "/",
+    // No disableSdk — SDK is always active
+  });
+
+  /* ── applyDataTracking ───────────────────────────────────────────
+     Called after SDK init and whenever consent state changes.
+
+     Enable tracking if:
+       (a) User accepted marketing cookies, OR
+       (b) User clicked "Notify Me" (explicit opt-in for notifications)
+
+     Disable tracking if:
+       Neither condition is met — SDK stays active for OSMs and
+       anonymous page-view analytics, but PII/custom events are blocked.
+     ─────────────────────────────────────────────────────────────── */
+  function applyDataTracking() {
+    if (!sdkInitialised) return;
+
+    if (cookieConsent || notifyOptIn) {
+      Moengage.enableDataTracking().then(function() {
+        dataTrackingEnabled = true;
+        Moengage.add_user_attribute("sdk_locale", "it_IT");
+        Moengage.add_user_attribute("sdk_lso",    "PIT");
+        console.log("[V3] Data tracking enabled — attributes set.");
+        updateStatusPanel();
+      });
+    } else {
+      Moengage.disableDataTracking();
+      dataTrackingEnabled = false;
+      console.log("[V3] Data tracking disabled — no consent (OSMs still active).");
+      updateStatusPanel();
+    }
+  }
+
+  /* ── Event Listener 1: Cookiebot fires this when consent ready ─ */
+  window.addEventListener('CookiebotOnConsentReady', function() {
+    if (window.Cookiebot && window.Cookiebot.consent) {
+      cookieConsent = window.Cookiebot.consent.marketing;
+    }
+    applyDataTracking();
+  });
+
+  /* ── Event Listener 2: MoEngage fires this when SDK is ready ── */
+  window.addEventListener('MOE_LIFECYCLE', function(event) {
+    if (event.detail && event.detail.name === 'SDK_INITIALIZED') {
+      sdkInitialised = true;
+      console.log("[V3] SDK_INITIALIZED — applying data tracking consent.");
+      applyDataTracking();
+    }
+  });
+
+  /* ── Track product_view only when data tracking is allowed ──── */
+  window.addEventListener('MOE_LIFECYCLE', function(event) {
+    if (event.detail && event.detail.name === 'SDK_INITIALIZED') {
+      if (cookieConsent) {
+        Moengage.track_event("product_view", {
+          "product_id":   "DC-L10E-N",
+          "product_name": "LUMIX L10 – Titanium Gold Edition",
+          "locale":       "it_IT",
+          "lso":          "PIT"
+        });
+      }
+    }
+  });
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     COOKIE CONSENT LOGIC
+     Sets the CookieConsent cookie in Cookiebot-compatible format:
+       CookieConsent=stamp=...;necessary:true;analytics:true/false;marketing:true/false
+     Then dispatches CookiebotOnConsentReady so MoEngage picks it up.
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Cookie helpers ──────────────────────────────────────────── */
+  function setCookieConsentCookie(necessary, analytics, marketing) {
+    var stamp   = "stamp=" + Date.now();
+    var value   = encodeURIComponent(
+      stamp + ";necessary:" + necessary +
+      ";analytics:" + analytics +
+      ";marketing:" + marketing
+    );
+    var expires = new Date();
+    expires.setFullYear(expires.getFullYear() + 1);
+    document.cookie = "CookieConsent=" + value +
+      ";expires=" + expires.toUTCString() + ";path=/";
+  }
+
+  function hideBanner() {
+    document.getElementById("cookie-overlay").style.display = "none";
+  }
+
+  function dispatchConsentReady(marketingGranted) {
+    /* Simulate the CookiebotOnConsentReady event that MoEngage listens for */
+    window.Cookiebot = window.Cookiebot || {};
+    window.Cookiebot.consent = {
+      necessary:  true,
+      analytics:  document.getElementById("toggle-analytics").checked,
+      marketing:  marketingGranted
+    };
+    cookieConsent = marketingGranted;
+    var evt = new Event("CookiebotOnConsentReady");
+    window.dispatchEvent(evt);
+  }
+
+  function acceptAllCookies() {
+    document.getElementById("toggle-analytics").checked = true;
+    document.getElementById("toggle-marketing").checked = true;
+    setCookieConsentCookie(true, true, true);
+    dispatchConsentReady(true);
+    hideBanner();
+  }
+
+  function rejectAllCookies() {
+    document.getElementById("toggle-analytics").checked = false;
+    document.getElementById("toggle-marketing").checked = false;
+    setCookieConsentCookie(true, false, false);
+    dispatchConsentReady(false);
+    hideBanner();
+  }
+
+  function savePreferences() {
+    var analytics = document.getElementById("toggle-analytics").checked;
+    var marketing = document.getElementById("toggle-marketing").checked;
+    setCookieConsentCookie(true, analytics, marketing);
+    dispatchConsentReady(marketing);
+    hideBanner();
+  }
+
+  /* ── Auto-hide banner if consent already given ───────────────── */
+  (function() {
+    var existing = document.cookie
+      .split("; ")
+      .find(function(r) { return r.startsWith("CookieConsent="); });
+    if (existing) {
+      hideBanner();
+      /* Sync toggles to stored preferences */
+      var decoded = decodeURIComponent(existing.replace("CookieConsent=", ""));
+      if (decoded.includes("analytics:true"))  document.getElementById("toggle-analytics").checked = true;
+      if (decoded.includes("marketing:true"))  document.getElementById("toggle-marketing").checked = true;
+    }
+  })();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     NOTIFY ME LOGIC
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── handleNotifyMeClick (V3 behaviour) ──────────────────────────
+     Flow (for users who rejected cookie consent):
+       1. enableDataTracking() — user's explicit action = consent for
+          notification purposes; unblocks PII & custom event tracking.
+       2. Set sessionStorage flag so applyDataTracking() on reload
+          keeps data tracking enabled (cookie consent is still denied).
+       3. Reload — on-page-load OSM fires; MoEngage can now track
+          the email the user submits in the OSM form.
+
+     For users who already accepted cookies, data tracking is already
+     on — just reload to show the on-load OSM.
+     ─────────────────────────────────────────────────────────────── */
+  function handleNotifyMeClick() {
+    var btn = document.getElementById("openNotifyBtn");
+    btn.innerHTML = '⏳ Loading…';
+    btn.disabled = true;
+
+    function doReload() {
+      sessionStorage.setItem('moe_notify_optin', '1');
+      notifyOptIn = true;
+      console.log("[V3] Data tracking enabled. Reloading for on-load OSM…");
+      location.reload();
+    }
+
+    if (cookieConsent) {
+      /* Tracking already on — just reload for on-load OSM */
+      doReload();
+    } else {
+      /* Enable data tracking first (user opted in via Notify Me click) */
+      Moengage.enableDataTracking().then(function() {
+        dataTrackingEnabled = true;
+        console.log("[V3] enableDataTracking() resolved.");
+        doReload();
+      }).catch(function(e) {
+        console.warn("[V3] enableDataTracking() failed:", e);
+        doReload(); /* still reload — don't leave button stuck */
+      });
+    }
+  }
+
+  /* ── Thumbnail switcher ───────────────────────────────────────── */
+  function setMain(thumb) {
+    document.getElementById("mainImg").src = thumb.src;
+    document.querySelectorAll(".thumbnails img").forEach(function(t) {
+      t.classList.remove("active");
+    });
+    thumb.classList.add("active");
+  }
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SDK STATUS PANEL UPDATER (debug helper)
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+  function updateStatusPanel() {
+    var consentEl = document.getElementById("status-consent");
+    var initEl    = document.getElementById("status-init");
+
+    consentEl.textContent = cookieConsent ? "✔ granted" : "✘ denied";
+    consentEl.className   = "val " + (cookieConsent ? "yes" : "no");
+
+    var notifyOptInEl = document.getElementById("status-notify-optin");
+    var optInActive = sessionStorage.getItem('moe_notify_optin') === '1';
+    notifyOptInEl.textContent = optInActive ? "✔ opted in" : "— none";
+    notifyOptInEl.className   = "val " + (optInActive ? "yes" : "no");
+
+    initEl.textContent = sdkInitialised ? "✔ yes" : "⏳ waiting";
+    initEl.className   = "val " + (sdkInitialised ? "yes" : "pending");
+
+    var dataEl = document.getElementById("status-data-tracking");
+    dataEl.textContent = dataTrackingEnabled ? "✔ enabled" : "✘ disabled";
+    dataEl.className   = "val " + (dataTrackingEnabled ? "yes" : "no");
+  }
+
+  /* Poll every 2s so panel stays accurate */
+  setInterval(updateStatusPanel, 2000);
+  updateStatusPanel();
+</script>
+
+</body>
+</html>
