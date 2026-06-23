@@ -655,7 +655,7 @@
      Cookie consent no longer gates MoEngage SDK behaviour.
      The banner is kept for legal/UI purposes only.
      ═══════════════════════════════════════════════════════════════════ -->
-<script>
+<!-- <script>
   function hideBanner() {
     document.getElementById("cookie-overlay").style.display = "none";
   }
@@ -671,7 +671,7 @@
       .find(function(r) { return r.startsWith("CookieConsent="); });
     if (existing) { hideBanner(); }
   })();
-</script>
+</script> -->
 
 <!-- ═══════════════════════════════════════════════════════════════════
      NOTIFY ME LOGIC
@@ -704,7 +704,7 @@
 <!-- ═══════════════════════════════════════════════════════════════════
      SDK STATUS PANEL UPDATER (debug helper)
      ═══════════════════════════════════════════════════════════════════ -->
-<script>
+<!-- <script>
   function updateStatusPanel() {
     var initEl = document.getElementById("status-init");
     initEl.textContent = sdkInitialised ? "✔ yes" : "⏳ waiting";
@@ -724,7 +724,7 @@
   /* Poll every 2s so panel stays accurate */
   setInterval(updateStatusPanel, 2000);
   updateStatusPanel();
-</script>
+</script> -->
 
 </body>
 </html>
