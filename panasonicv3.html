@@ -5,11 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LUMIX L10 – Titanium Gold Edition | Panasonic E-Shop [V3]</title>
 
-  <!-- MoEngage SDK preconnect (mirrors original) -->
+  <!-- MoEngage SDK preconnect — dc_1 maps to sdk-01 -->
   <link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
   <link rel="dns-prefetch" href="https://cdn.moengage.com/" />
-  <link rel="preconnect" href="https://sdk-02.moengage.com/" crossorigin />
-  <link rel="dns-prefetch" href="https://sdk-02.moengage.com/" />
+  <link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin />
+  <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" />
+
+  <!-- ═══ MoEngage Personalize — Anti-Flicker (Option 2: element-level) ═══
+       Masks only the product elements that are personalised by MoEngage
+       Personalize so the rest of the page renders immediately.
+       maxRenderTime = 1500 ms — page is unmasked after this even if the
+       personalised experience has not yet arrived.
+       Selectors cover the main image, title, price, and edition badge.
+  ════════════════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    const personalizedSelectors = [
+      '#mainImg',          // hero product image
+      '.info h1',          // product title
+      '.price-block',      // price + label
+      '.badge-gold'        // "25th Anniversary Edition" badge
+    ];
+    const maxRenderTime = 1500;
+    let elements = [];
+    const retryElements = {};
+    let retryCount = 0;
+    let retryInterval;
+
+    if (!personalizedSelectors.length) { elements.push(document.documentElement); }
+
+    function moeAntiFlickerFunction(selectorElements) {
+      if (!selectorElements.length) { clearInterval(retryInterval); }
+      else {
+        selectorElements.forEach((el) => {
+          const selectors = document.querySelectorAll(el);
+          if (selectors.length > 0) { elements.push(...selectors); delete retryElements[el]; }
+          else { retryElements[el] = false; }
+        });
+      }
+      addAntiFlickerScript(window, elements);
+      elements = [];
+    }
+
+    moeAntiFlickerFunction(personalizedSelectors);
+
+    if (Object.keys(retryElements).length) {
+      retryInterval = setInterval(() => {
+        moeAntiFlickerFunction(Object.keys(retryElements));
+        retryCount += 1;
+        if (retryCount > maxRenderTime / 50) { clearInterval(retryInterval); }
+      }, 50);
+    }
+
+    function addAntiFlickerScript(window, elements) {
+      let moe_s = '.moe-anti-flicker-hide { opacity: 0 !important; filter: blur(10px) !important} .moe-anti-flicker-show { opacity: 1 !important; filter: blur(0px) !important;transition: opacity 0.5s, filter 0.5s !important; } ';
+      (function (a, s, y, n, c, h, i, d, e) {
+        h = (typeof h !== 'undefined') ? h : {};
+        if (!document.getElementById('moe-flicker-style')) {
+          var el = document.createElement('style'); el.id = 'moe-flicker-style'; el.type = 'text/css';
+          el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s));
+          document.getElementsByTagName("head")[0].appendChild(el);
+        }
+        s.forEach(el => el.classList += ' ' + y);
+        h.start = 1 * new Date;
+        h.end = i = function () { s.forEach(el => { el.classList.remove('moe-anti-flicker-hide'); el.classList.add('moe-anti-flicker-show'); }) };
+        (a[n] = a[n] || []).hide = h;
+        setTimeout(function () { i(); h.end = null; }, c);
+        h.timeout = c;
+      })(window, elements, 'moe-anti-flicker-hide', 'dataLayer', maxRenderTime);
+    }
+  })();
+  </script>
 
   <style>
     /* ── Reset & Base ──────────────────────────────────────────────── */
@@ -471,7 +537,8 @@
   <div class="sdk-row"><span class="label">Notify Opt-in</span><span class="val" id="status-notify-optin">—</span></div>
   <div class="sdk-row"><span class="label">SDK Initialised</span><span class="val" id="status-init">—</span></div>
   <div class="sdk-row"><span class="label">Data Tracking</span><span class="val" id="status-data-tracking">—</span></div>
-  <div class="sdk-row"><span class="label">App ID</span><span class="val" style="font-size:10px">TN9USB531HGK7M5A456FEAPK</span></div>
+  <div class="sdk-row"><span class="label">Personalize SDK</span><span class="val" id="status-webp">—</span></div>
+  <div class="sdk-row"><span class="label">App ID</span><span class="val" style="font-size:10px">2877NHMD0TOHATHC6NNHDERW</span></div>
 </div>
 
 <footer>
@@ -575,7 +642,21 @@
     swScope:          "/",
     // No disableSdk — SDK is always active
   });
+</script>
 
+<!-- ═══ MoEngage Personalize SDK ══════════════════════════════════════
+     Must be loaded AFTER the main MoEngage SDK snippet above and MUST
+     use the same SDK version (sdkVersion = 2).
+     debug_logs=1 enables test-environment tracking — remove for prod.
+     Docs: https://www.moengage.com/docs/developer-guide/personalize-sdk/
+           sdk-integration/web-personalization-v2
+════════════════════════════════════════════════════════════════════════ -->
+<script
+  src="https://cdn.moengage.com/release/dc_1/versions/2/moe_webSdk_webp.min.latest.js?app_id=2877NHMD0TOHATHC6NNHDERW&debug_logs=1"
+  async
+></script>
+
+<script>
   /* ── applyDataTracking ───────────────────────────────────────────
      Called after SDK init and whenever consent state changes.
 
@@ -791,6 +872,11 @@
     var dataEl = document.getElementById("status-data-tracking");
     dataEl.textContent = dataTrackingEnabled ? "✔ enabled" : "✘ disabled";
     dataEl.className   = "val " + (dataTrackingEnabled ? "yes" : "no");
+
+    var webpEl = document.getElementById("status-webp");
+    var webpLoaded = !!(window.MoePersonalize || window.moe_webp || document.querySelector('script[src*="moe_webSdk_webp"]'));
+    webpEl.textContent = webpLoaded ? "✔ loaded" : "⏳ loading";
+    webpEl.className   = "val " + (webpLoaded ? "yes" : "pending");
   }
 
   /* Poll every 2s so panel stays accurate */
