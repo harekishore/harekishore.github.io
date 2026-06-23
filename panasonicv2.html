@@ -3,13 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LUMIX L10 – Titanium Gold Edition | Panasonic E-Shop [V2]</title>
+  <title>LUMIX L10 – Titanium Gold Edition | Panasonic E-Shop [V4]</title>
 
-  <!-- MoEngage SDK preconnect (mirrors original) -->
+  <!-- MoEngage SDK preconnect — dc_1 maps to sdk-01 -->
   <link rel="preconnect" href="https://cdn.moengage.com/" crossorigin />
   <link rel="dns-prefetch" href="https://cdn.moengage.com/" />
-  <link rel="preconnect" href="https://sdk-02.moengage.com/" crossorigin />
-  <link rel="dns-prefetch" href="https://sdk-02.moengage.com/" />
+  <link rel="preconnect" href="https://sdk-01.moengage.com/" crossorigin />
+  <link rel="dns-prefetch" href="https://sdk-01.moengage.com/" />
+
+  <!-- ═══ MoEngage Personalize — Anti-Flicker (Option 2: element-level) ═══
+       Masks only the product elements that are personalised by MoEngage
+       Personalize so the rest of the page renders immediately.
+       maxRenderTime = 1500 ms — page is unmasked after this even if the
+       personalised experience has not yet arrived.
+       Selectors cover the main image, title, price, and edition badge.
+  ════════════════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    const personalizedSelectors = [
+      '#mainImg',          // hero product image
+      '.info h1',          // product title
+      '.price-block',      // price + label
+      '.badge-gold'        // "25th Anniversary Edition" badge
+    ];
+    const maxRenderTime = 1500;
+    let elements = [];
+    const retryElements = {};
+    let retryCount = 0;
+    let retryInterval;
+
+    if (!personalizedSelectors.length) { elements.push(document.documentElement); }
+
+    function moeAntiFlickerFunction(selectorElements) {
+      if (!selectorElements.length) { clearInterval(retryInterval); }
+      else {
+        selectorElements.forEach((el) => {
+          const selectors = document.querySelectorAll(el);
+          if (selectors.length > 0) { elements.push(...selectors); delete retryElements[el]; }
+          else { retryElements[el] = false; }
+        });
+      }
+      addAntiFlickerScript(window, elements);
+      elements = [];
+    }
+
+    moeAntiFlickerFunction(personalizedSelectors);
+
+    if (Object.keys(retryElements).length) {
+      retryInterval = setInterval(() => {
+        moeAntiFlickerFunction(Object.keys(retryElements));
+        retryCount += 1;
+        if (retryCount > maxRenderTime / 50) { clearInterval(retryInterval); }
+      }, 50);
+    }
+
+    function addAntiFlickerScript(window, elements) {
+      let moe_s = '.moe-anti-flicker-hide { opacity: 0 !important; filter: blur(10px) !important} .moe-anti-flicker-show { opacity: 1 !important; filter: blur(0px) !important;transition: opacity 0.5s, filter 0.5s !important; } ';
+      (function (a, s, y, n, c, h, i, d, e) {
+        h = (typeof h !== 'undefined') ? h : {};
+        if (!document.getElementById('moe-flicker-style')) {
+          var el = document.createElement('style'); el.id = 'moe-flicker-style'; el.type = 'text/css';
+          el.styleSheet ? (el.styleSheet.cssText = moe_s) : el.appendChild(document.createTextNode(moe_s));
+          document.getElementsByTagName("head")[0].appendChild(el);
+        }
+        s.forEach(el => el.classList += ' ' + y);
+        h.start = 1 * new Date;
+        h.end = i = function () { s.forEach(el => { el.classList.remove('moe-anti-flicker-hide'); el.classList.add('moe-anti-flicker-show'); }) };
+        (a[n] = a[n] || []).hide = h;
+        setTimeout(function () { i(); h.end = null; }, c);
+        h.timeout = c;
+      })(window, elements, 'moe-anti-flicker-hide', 'dataLayer', maxRenderTime);
+    }
+  })();
+  </script>
 
   <style>
     /* ── Reset & Base ──────────────────────────────────────────────── */
@@ -466,12 +532,11 @@
 
 <!-- ═══ SDK STATUS DEBUG PANEL ══════════════════════════════════════ -->
 <div class="sdk-status" id="sdkPanel">
-  <h4>🔧 MoEngage SDK Status [V2]</h4>
-  <div class="sdk-row"><span class="label">Consent (marketing)</span><span class="val" id="status-consent">—</span></div>
-  <div class="sdk-row"><span class="label">Notify Intent</span><span class="val" id="status-notify-intent">—</span></div>
+  <h4>🔧 MoEngage SDK Status [V4]</h4>
   <div class="sdk-row"><span class="label">SDK Initialised</span><span class="val" id="status-init">—</span></div>
-  <div class="sdk-row"><span class="label">SDK Enabled</span><span class="val" id="status-enabled">—</span></div>
-  <div class="sdk-row"><span class="label">App ID</span><span class="val" style="font-size:10px">TN9USB531HGK7M5A456FEAPK</span></div>
+  <div class="sdk-row"><span class="label">Data Tracking</span><span class="val" id="status-data-tracking">✘ disabled</span></div>
+  <div class="sdk-row"><span class="label">OSM / Personalize</span><span class="val" id="status-webp">—</span></div>
+  <div class="sdk-row"><span class="label">App ID</span><span class="val" style="font-size:10px">2877NHMD0TOHATHC6NNHDERW</span></div>
 </div>
 
 <footer>
@@ -489,36 +554,15 @@
        5. enableMoSdk(): if both flags → call Moengage.enableSdk() + set attributes
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
-  /* ── Config (matches production) ─────────────────────────────── */
+  /* ── Config ──────────────────────────────────────────────────── */
   var moeDataCenter  = "dc_1";
   var moeAppID       = "2877NHMD0TOHATHC6NNHDERW";
   var sdkVersion     = "2";
 
-  var sdkInitialised = false;
-  var cookieConsent  = false;
+  var sdkInitialised      = false;
+  var dataTrackingEnabled = false; // always false in V4
 
-  /* ── V2: Notify-intent flag (set before reload, cleared after SDK init) ── */
-  var notifyIntentPending = sessionStorage.getItem('moe_notify_intent') === '1';
-  if (notifyIntentPending) {
-    console.log("[V2] Notify intent detected — will enable SDK and trigger exit intent after init.");
-  }
-
-  /* ── Read CookieConsent cookie (Cookiebot format)
-        Format set by Cookiebot: "stamp=...; necessary:true; marketing:true; ..."
-        We look for the value immediately after "marketing:" and check for "true"
-     ─────────────────────────────────────────────────────────────── */
-  var consentCookieValue = document.cookie
-    .split("; ")
-    .find(function(row) { return row.startsWith("CookieConsent="); });
-
-  if (consentCookieValue) {
-    var marketingPart = consentCookieValue.split("marketing:")[1];
-    if (marketingPart && marketingPart.slice(0, 4).includes("true")) {
-      cookieConsent = true;
-    }
-  }
-
-  /* ── Load & init MoEngage SDK (same snippet as production) ──── */
+  /* ── Load MoEngage SDK snippet ────────────────────────────────── */
   !function(e,n,i,t,a,r,o,d){
     if(!moeDataCenter||!moeDataCenter.match(/^dc_[0-9]+$/gm))
       return console.error("Data center has not been passed correctly.");
@@ -562,149 +606,70 @@
     "Moengage"
   );
 
-  /* ── V2: SDK init — force-enable if notify intent is pending ── */
-  /* If the user clicked "Notify Me", treat that as explicit opt-in and
-     bypass the marketing-cookie gate for this page load only.           */
-  var disableSdkOnInit = notifyIntentPending ? false : !cookieConsent;
-
+  /* ── V4: SDK always initialised, data tracking always disabled ──
+     disableSdk is never set — the SDK runs fully for OSMs and
+     Personalize experiences. disableDataTracking() is called
+     unconditionally on init so no PII or custom events are ever
+     sent, regardless of cookie consent.
+     ─────────────────────────────────────────────────────────────── */
   Moengage = moe({
     app_id:           moeAppID,
-    debug_logs:       1,                   // set to 0 in production
+    debug_logs:       0,
     disable_web_push: true,
     swPath:           "/serviceworker.js",
     swScope:          "/",
-    disableSdk:       disableSdkOnInit     // false when notify intent is pending
   });
+</script>
 
-  /* ── enableMoSdk: called when BOTH consent AND SDK are ready ── */
-  function enableMoSdk() {
-    if (sdkInitialised && cookieConsent && !Moengage.isSdkEnabled()) {
-      Moengage.enableSdk().then(function() {
-        Moengage.add_user_attribute("sdk_locale", "it_IT");
-        Moengage.add_user_attribute("sdk_lso",    "PIT");
-        console.log("[MoEngage] SDK enabled & attributes set.");
-        updateStatusPanel();
-      });
-    }
-    updateStatusPanel();
-  }
+<!-- ═══ MoEngage Personalize SDK ══════════════════════════════════════
+     Must be loaded AFTER the main MoEngage SDK snippet above and MUST
+     use the same SDK version (sdkVersion = 2).
+     debug_logs=1 enables test-environment tracking — remove for prod.
+     Docs: https://www.moengage.com/docs/developer-guide/personalize-sdk/
+           sdk-integration/web-personalization-v2
+════════════════════════════════════════════════════════════════════════ -->
+<script
+  src="https://cdn.moengage.com/release/dc_1/versions/2/moe_webSdk_webp.min.latest.js?app_id=2877NHMD0TOHATHC6NNHDERW&debug_logs=1"
+  async
+></script>
 
-  /* ── Event Listener 1: Cookiebot fires this when consent ready ─ */
-  window.addEventListener('CookiebotOnConsentReady', function() {
-    if (window.Cookiebot && window.Cookiebot.consent) {
-      cookieConsent = window.Cookiebot.consent.marketing;
-    }
-    enableMoSdk();
-  });
-
-  /* ── Event Listener 2: MoEngage fires this when SDK is ready ── */
+<script>
+  /* ── V4: SDK lifecycle — disable data tracking immediately on init ─
+     No consent logic. disableDataTracking() is called as soon as the
+     SDK signals it is ready. OSMs, Personalize, and anonymous analytics
+     continue to work; PII and custom events are blocked at all times.
+     ─────────────────────────────────────────────────────────────── */
   window.addEventListener('MOE_LIFECYCLE', function(event) {
     if (event.detail && event.detail.name === 'SDK_INITIALIZED') {
       sdkInitialised = true;
-      console.log("[MoEngage] SDK_INITIALIZED received.");
-
-      /* ── V2: If this reload was triggered by Notify Me click,
-              clear the flag. SDK is already enabled (disableSdk:false),
-              so MoEngage will fire the on-page-load OSM automatically. ── */
-      if (notifyIntentPending) {
-        sessionStorage.removeItem('moe_notify_intent');
-        notifyIntentPending = false;
-        console.log("[V2] Notify intent flag cleared. On-load OSM will fire automatically.");
-      }
-
-      enableMoSdk();
-    }
-  });
-
-  /* ── Track product_view (mirrors production) ──────────────────── */
-  window.addEventListener('MOE_LIFECYCLE', function(event) {
-    if (event.detail && event.detail.name === 'SDK_INITIALIZED') {
-      if (cookieConsent || disableSdkOnInit === false) {
-        Moengage.track_event("product_view", {
-          "product_id":   "DC-L10E-N",
-          "product_name": "LUMIX L10 – Titanium Gold Edition",
-          "locale":       "it_IT",
-          "lso":          "PIT"
-        });
-      }
+      Moengage.disableDataTracking();
+      dataTrackingEnabled = false;
+      console.log("[V4] SDK_INITIALIZED — data tracking disabled. OSMs + Personalize active.");
+      updateStatusPanel();
     }
   });
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════════
-     COOKIE CONSENT LOGIC
-     Sets the CookieConsent cookie in Cookiebot-compatible format:
-       CookieConsent=stamp=...;necessary:true;analytics:true/false;marketing:true/false
-     Then dispatches CookiebotOnConsentReady so MoEngage picks it up.
+     COOKIE CONSENT BANNER — V4
+     Cookie consent no longer gates MoEngage SDK behaviour.
+     The banner is kept for legal/UI purposes only.
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
-  /* ── Cookie helpers ──────────────────────────────────────────── */
-  function setCookieConsentCookie(necessary, analytics, marketing) {
-    var stamp   = "stamp=" + Date.now();
-    var value   = encodeURIComponent(
-      stamp + ";necessary:" + necessary +
-      ";analytics:" + analytics +
-      ";marketing:" + marketing
-    );
-    var expires = new Date();
-    expires.setFullYear(expires.getFullYear() + 1);
-    document.cookie = "CookieConsent=" + value +
-      ";expires=" + expires.toUTCString() + ";path=/";
-  }
-
   function hideBanner() {
     document.getElementById("cookie-overlay").style.display = "none";
   }
 
-  function dispatchConsentReady(marketingGranted) {
-    /* Simulate the CookiebotOnConsentReady event that MoEngage listens for */
-    window.Cookiebot = window.Cookiebot || {};
-    window.Cookiebot.consent = {
-      necessary:  true,
-      analytics:  document.getElementById("toggle-analytics").checked,
-      marketing:  marketingGranted
-    };
-    cookieConsent = marketingGranted;
-    var evt = new Event("CookiebotOnConsentReady");
-    window.dispatchEvent(evt);
-  }
+  function acceptAllCookies()  { hideBanner(); }
+  function rejectAllCookies()  { hideBanner(); }
+  function savePreferences()   { hideBanner(); }
 
-  function acceptAllCookies() {
-    document.getElementById("toggle-analytics").checked = true;
-    document.getElementById("toggle-marketing").checked = true;
-    setCookieConsentCookie(true, true, true);
-    dispatchConsentReady(true);
-    hideBanner();
-  }
-
-  function rejectAllCookies() {
-    document.getElementById("toggle-analytics").checked = false;
-    document.getElementById("toggle-marketing").checked = false;
-    setCookieConsentCookie(true, false, false);
-    dispatchConsentReady(false);
-    hideBanner();
-  }
-
-  function savePreferences() {
-    var analytics = document.getElementById("toggle-analytics").checked;
-    var marketing = document.getElementById("toggle-marketing").checked;
-    setCookieConsentCookie(true, analytics, marketing);
-    dispatchConsentReady(marketing);
-    hideBanner();
-  }
-
-  /* ── Auto-hide banner if consent already given ───────────────── */
+  /* Auto-hide if already answered */
   (function() {
     var existing = document.cookie
       .split("; ")
       .find(function(r) { return r.startsWith("CookieConsent="); });
-    if (existing) {
-      hideBanner();
-      /* Sync toggles to stored preferences */
-      var decoded = decodeURIComponent(existing.replace("CookieConsent=", ""));
-      if (decoded.includes("analytics:true"))  document.getElementById("toggle-analytics").checked = true;
-      if (decoded.includes("marketing:true"))  document.getElementById("toggle-marketing").checked = true;
-    }
+    if (existing) { hideBanner(); }
   })();
 </script>
 
@@ -712,22 +677,36 @@
      NOTIFY ME LOGIC
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
-  /* ── handleNotifyMeClick (V2 behaviour) ──────────────────────────
-     1. Set sessionStorage flag so the next page load knows to trigger
-        exit intent after the SDK initialises with disableSdk:false.
-     2. Visual feedback on the button while the reload is in flight.
-     3. Reload the page.
+  /* ── triggerSyntheticExitIntent ──────────────────────────────────
+     V4: SDK is always active so the synthetic mouseleave fires
+     directly — no enableSdk(), no reload required.
+     MoEngage exit-intent listener watches for 'mouseleave' on
+     document with clientY near 0 (cursor toward browser chrome).
+     ─────────────────────────────────────────────────────────────── */
+  function triggerSyntheticExitIntent() {
+    var evt = new MouseEvent("mouseleave", {
+      bubbles:       false,
+      cancelable:    true,
+      clientX:       window.innerWidth / 2,
+      clientY:       0,
+      relatedTarget: null
+    });
+    try {
+      document.dispatchEvent(evt);
+      console.log("[V4] Synthetic exit-intent dispatched.");
+    } catch (e) {
+      console.warn("[V4] Could not dispatch exit-intent:", e);
+    }
+  }
+
+  /* ── handleNotifyMeClick (V4 behaviour) ──────────────────────────
+     SDK is always on + data tracking is already disabled globally.
+     Simply fire the synthetic exit intent — MoEngage will show the
+     exit-intent OSM campaign. No reload, no consent dance.
      ─────────────────────────────────────────────────────────────── */
   function handleNotifyMeClick() {
-    var btn = document.getElementById("openNotifyBtn");
-    btn.textContent = "Loading…";
-    btn.disabled = true;
-
-    sessionStorage.setItem('moe_notify_intent', '1');
-    console.log("[V2] Notify intent flag set. Reloading page to enable SDK…");
-
-    /* Small delay so the button state is visible before reload */
-    setTimeout(function() { location.reload(); }, 300);
+    console.log("[V4] Notify Me clicked — triggering exit-intent OSM.");
+    triggerSyntheticExitIntent();
   }
 
   /* ── Thumbnail switcher ───────────────────────────────────────── */
@@ -745,25 +724,19 @@
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
   function updateStatusPanel() {
-    var consentEl = document.getElementById("status-consent");
-    var initEl    = document.getElementById("status-init");
-    var enabledEl = document.getElementById("status-enabled");
-
-    consentEl.textContent = cookieConsent ? "✔ granted" : "✘ denied";
-    consentEl.className   = "val " + (cookieConsent ? "yes" : "no");
-
-    var notifyEl = document.getElementById("status-notify-intent");
-    var intentActive = sessionStorage.getItem('moe_notify_intent') === '1';
-    notifyEl.textContent = intentActive ? "⏳ pending reload" : (notifyIntentPending === false && disableSdkOnInit === false ? "✔ triggered" : "— none");
-    notifyEl.className   = "val " + (intentActive ? "pending" : "yes");
-
+    var initEl = document.getElementById("status-init");
     initEl.textContent = sdkInitialised ? "✔ yes" : "⏳ waiting";
     initEl.className   = "val " + (sdkInitialised ? "yes" : "pending");
 
-    var enabled = false;
-    try { enabled = Moengage && Moengage.isSdkEnabled && Moengage.isSdkEnabled(); } catch(e){}
-    enabledEl.textContent = enabled ? "✔ yes" : "✘ no";
-    enabledEl.className   = "val " + (enabled ? "yes" : "no");
+    /* Data tracking is always disabled in V4 — static display */
+    var dataEl = document.getElementById("status-data-tracking");
+    dataEl.textContent = "✘ disabled (always)";
+    dataEl.className   = "val no";
+
+    var webpEl = document.getElementById("status-webp");
+    var webpLoaded = !!(window.MoePersonalize || window.moe_webp || document.querySelector('script[src*="moe_webSdk_webp"]'));
+    webpEl.textContent = webpLoaded ? "✔ loaded" : "⏳ loading";
+    webpEl.className   = "val " + (webpLoaded ? "yes" : "pending");
   }
 
   /* Poll every 2s so panel stays accurate */
