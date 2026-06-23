@@ -614,7 +614,7 @@
      ─────────────────────────────────────────────────────────────── */
   Moengage = moe({
     app_id:           moeAppID,
-    debug_logs:       0,
+    debug_logs:       1,
     disable_web_push: true,
     swPath:           "/serviceworker.js",
     swScope:          "/",
@@ -629,7 +629,7 @@
            sdk-integration/web-personalization-v2
 ════════════════════════════════════════════════════════════════════════ -->
 <script
-  src="https://cdn.moengage.com/release/dc_1/versions/2/moe_webSdk_webp.min.latest.js?app_id=2877NHMD0TOHATHC6NNHDERW&debug_logs=0"
+  src="https://cdn.moengage.com/release/dc_1/versions/2/moe_webSdk_webp.min.latest.js?app_id=2877NHMD0TOHATHC6NNHDERW&debug_logs=1"
   async
 ></script>
 
@@ -677,36 +677,18 @@
      NOTIFY ME LOGIC
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
-  /* ── triggerSyntheticExitIntent ──────────────────────────────────
-     V4: SDK is always active so the synthetic mouseleave fires
-     directly — no enableSdk(), no reload required.
-     MoEngage exit-intent listener watches for 'mouseleave' on
-     document with clientY near 0 (cursor toward browser chrome).
-     ─────────────────────────────────────────────────────────────── */
-  function triggerSyntheticExitIntent() {
-    var evt = new MouseEvent("mouseleave", {
-      bubbles:       false,
-      cancelable:    true,
-      clientX:       window.innerWidth / 2,
-      clientY:       0,
-      relatedTarget: null
-    });
-    try {
-      document.dispatchEvent(evt);
-      console.log("[V4] Synthetic exit-intent dispatched.");
-    } catch (e) {
-      console.warn("[V4] Could not dispatch exit-intent:", e);
-    }
-  }
-
   /* ── handleNotifyMeClick (V4 behaviour) ──────────────────────────
-     SDK is always on + data tracking is already disabled globally.
-     Simply fire the synthetic exit intent — MoEngage will show the
-     exit-intent OSM campaign. No reload, no consent dance.
+     Reload the page with ?notifyme=true appended to the URL.
+     On reload, the SDK initialises normally and MoEngage fires the
+     on-page-load OSM. The URL parameter can also be used in the
+     MoEngage campaign URL targeting so the OSM only appears for
+     users who explicitly clicked "Notify Me".
      ─────────────────────────────────────────────────────────────── */
   function handleNotifyMeClick() {
-    console.log("[V4] Notify Me clicked — triggering exit-intent OSM.");
-    triggerSyntheticExitIntent();
+    var url = new URL(window.location.href);
+    url.searchParams.set('notifyme', 'true');
+    console.log("[V4] Notify Me clicked — reloading with", url.href);
+    window.location.href = url.href;
   }
 
   /* ── Thumbnail switcher ───────────────────────────────────────── */
