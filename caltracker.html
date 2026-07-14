@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>CalProgram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f0f; --surface:#161616; --surface2:#1e1e1e; --border:#2a2a2a;
+  --accent:#c8f55a; --teal:#5af5c8; --amber:#f5c85a; --purple:#c85af5; --red:#f55a5a;
+  --text:#e8e8e8; --muted:#888; --dim:#555;
+  --focus-push:#f55a5a; --focus-pull:#5af5c8; --focus-legs:#c8f55a;
+  --focus-full:#c85af5; --focus-rest:#f5c85a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif; font-weight:400;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:'Space Mono',monospace}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{height:0;width:0}
+
+/* ---------- HEADER ---------- */
+header{
+  position:sticky; top:0; z-index:40; background:rgba(15,15,15,.92);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:baseline;gap:8px}
+.brand h1{font-size:19px;font-weight:700;letter-spacing:-.5px;margin:0}
+.brand h1 span{color:var(--accent)}
+.brand .sub{font-size:11px;color:var(--muted);font-weight:400}
+.week-badge{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--accent);border:1px solid rgba(200,245,90,.35);
+  background:rgba(200,245,90,.08);padding:5px 10px;border-radius:6px;white-space:nowrap;
+}
+
+/* day nav */
+.daynav{display:flex;gap:6px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+.daynav button{
+  flex:1 0 auto;min-width:42px;padding:8px 4px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s;
+}
+.daynav button .dot{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.daynav button.active{color:var(--bg);background:var(--accent);border-color:var(--accent)}
+.daynav button.active .dot{background:var(--bg)}
+.daynav button.done{border-color:rgba(90,245,200,.4)}
+.daynav button.done .dot{background:var(--teal)}
+.daynav button.rest{color:var(--amber)}
+
+/* ---------- LAYOUT ---------- */
+main{padding:16px 16px 8px;max-width:640px;margin:0 auto}
+.hidden{display:none!important}
+
+/* phase banner */
+.phase{
+  border-left:3px solid var(--accent);background:var(--surface);
+  border-radius:8px;padding:11px 13px;margin-bottom:14px;font-size:13px;
+  color:var(--text);line-height:1.5;
+}
+.phase b{color:var(--accent);font-weight:600}
+.phase.caution{border-left-color:var(--red)}
+.phase.caution b{color:var(--red)}
+
+/* day title */
+.day-title{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+.day-title h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.5px}
+.type-pill{
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;
+  padding:4px 8px;border-radius:5px;letter-spacing:.5px;
+}
+.tp-push{background:rgba(245,90,90,.14);color:var(--red)}
+.tp-pull{background:rgba(90,245,200,.14);color:var(--teal)}
+.tp-legs{background:rgba(200,245,90,.14);color:var(--accent)}
+.tp-full{background:rgba(200,90,245,.14);color:var(--purple)}
+.tp-rest{background:rgba(245,200,90,.14);color:var(--amber)}
+.day-focus{font-size:12px;color:var(--muted);margin:-8px 0 16px}
+
+/* progress bar */
+.progress-wrap{margin-bottom:18px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.progress-top .lbl{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.progress-top .val{font-size:12px;font-weight:700;color:var(--accent);font-family:'Space Mono',monospace}
+.bar{height:6px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:4px;transition:width .35s ease}
+
+/* section header */
+.sec-head{
+  display:flex;align-items:center;gap:9px;margin:22px 0 11px;
+}
+.sec-head .num{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);font-weight:700}
+.sec-head h3{margin:0;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text)}
+.sec-head .hint{font-size:10px;color:var(--muted);margin-left:auto;font-family:'Space Mono',monospace}
+
+/* exercise card */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  margin-bottom:9px;overflow:hidden;transition:border-color .15s,background .15s;
+}
+.card.iso{border-left:3px solid var(--teal)}
+.card.done{border-color:rgba(200,245,90,.5);background:rgba(200,245,90,.045)}
+.card-main{display:flex;align-items:center;gap:12px;padding:13px 14px}
+.check{
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--border);
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.card.done .check{background:var(--accent);border-color:var(--accent)}
+.check svg{width:13px;height:13px;opacity:0;transition:.15s}
+.card.done .check svg{opacity:1}
+.ex-body{flex:1;min-width:0}
+.ex-name{font-size:14.5px;font-weight:500;line-height:1.3;transition:.15s}
+.card.done .ex-name{color:var(--muted);text-decoration:line-through}
+.ex-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.ex-sets{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent)}
+.card.done .ex-sets{color:var(--muted)}
+.ex-joint{font-size:11px;color:var(--teal)}
+.badge{
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;
+  padding:2px 6px;border-radius:4px;letter-spacing:.4px;
+}
+.b-joint{background:rgba(90,245,200,.14);color:var(--teal)}
+.b-skill{background:rgba(200,245,90,.14);color:var(--accent)}
+.b-mobility{background:rgba(245,200,90,.14);color:var(--amber)}
+.b-strength{background:rgba(245,90,90,.14);color:var(--red)}
+.expand-btn{
+  width:30px;height:30px;flex:0 0 auto;border-radius:7px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.2s;
+}
+.expand-btn svg{width:14px;height:14px;transition:transform .25s}
+.card.open .expand-btn svg{transform:rotate(180deg)}
+.card.open .expand-btn{color:var(--accent)}
+.detail{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.card.open .detail{max-height:1200px}
+.detail-inner{padding:0 14px 14px;border-top:1px solid var(--border);margin-top:2px;padding-top:13px}
+.detail-inner svg.illus{width:100%;border-radius:8px;display:block;margin-bottom:12px;background:#111}
+.tips{list-style:none;padding:0;margin:0}
+.tips li{font-size:12.5px;color:var(--muted);line-height:1.5;padding-left:16px;position:relative;margin-bottom:6px}
+.tips li::before{content:'›';position:absolute;left:2px;color:var(--accent);font-weight:700}
+.regress{
+  margin-top:10px;font-size:12px;color:var(--amber);background:rgba(245,200,90,.07);
+  border-radius:7px;padding:8px 11px;line-height:1.45;
+}
+.regress b{font-weight:700}
+/* hold timer */
+.timer{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--surface2);border-radius:8px;padding:9px 11px}
+.timer .tval{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--teal);min-width:56px}
+.timer button{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:6px 12px;border-radius:6px;background:var(--teal);color:var(--bg)}
+.timer button.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.timer .thint{font-size:10px;color:var(--dim);margin-left:auto;font-family:'Space Mono',monospace}
+
+/* rest activities */
+.rest-list{list-style:none;padding:0;margin:0}
+.rest-list li{
+  display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px;margin-bottom:9px;font-size:14px;
+}
+.rest-list li .em{font-size:22px}
+
+/* mark complete */
+.mark-btn{
+  width:100%;margin:20px 0 6px;padding:15px;border-radius:11px;font-size:14px;font-weight:700;
+  background:var(--surface2);color:var(--dim);border:1px solid var(--border);transition:.2s;
+  letter-spacing:.3px;
+}
+.mark-btn.ready{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.mark-btn.completed{background:rgba(90,245,200,.12);color:var(--teal);border-color:rgba(90,245,200,.4)}
+
+/* ---------- SKILL TRACKER ---------- */
+.skill-block{margin-top:30px;border-top:1px solid var(--border);padding-top:22px}
+.skill-block > .sec-head{margin-top:0}
+.skill-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.skill-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.skill-name{font-size:14px;font-weight:600}
+.skill-stagelbl{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+.skill-cur{color:var(--accent);font-weight:700}
+.stage-pills{display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap}
+.stage-pills > button{
+  flex:1 1 auto;min-width:0;height:28px;border-radius:6px;font-family:'Space Mono',monospace;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.skill-current-name{font-size:13px;color:var(--text);margin-bottom:12px;min-height:17px}
+.skill-current-name b{color:var(--accent);font-weight:600}
+.skill-ctrl{display:flex;gap:7px}
+.skill-ctrl > button{
+  height:34px;border-radius:8px;font-family:'Space Mono',monospace;font-weight:700;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- WEEK OVERVIEW ---------- */
+.week-block{margin-top:28px;border-top:1px solid var(--border);padding-top:22px}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week-cell{
+  aspect-ratio:1/1.15;border-radius:9px;background:var(--surface);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:.15s;
+}
+.week-cell .wd{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:var(--muted)}
+.week-cell .we{font-size:17px;line-height:1}
+.week-cell.today{border-color:var(--accent);border-width:2px}
+.week-cell.done{background:rgba(90,245,200,.09);border-color:rgba(90,245,200,.35)}
+
+/* ---------- NUTRITION ---------- */
+.subtabs{display:flex;gap:6px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px}
+.subtabs button{
+  flex:1;padding:9px 4px;border-radius:7px;font-size:12px;font-weight:600;color:var(--muted);transition:.15s;
+}
+.subtabs button.active{background:var(--surface2);color:var(--accent)}
+
+/* macro toggle + grid */
+.daytype-toggle{display:flex;gap:6px;margin-bottom:16px}
+.daytype-toggle button{
+  flex:1;padding:11px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);
+  background:var(--surface);border:1px solid var(--border);transition:.15s;
+}
+.daytype-toggle button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.macro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:8px}
+.macro{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 14px}
+.macro .ml{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-family:'Space Mono',monospace}
+.macro .mv{font-size:19px;font-weight:700;margin-top:5px;font-family:'Space Mono',monospace}
+.macro.cal .mv{color:var(--accent)}
+.macro.pro .mv{color:var(--teal)}
+.macro.carb .mv{color:var(--amber)}
+.macro.fat .mv{color:var(--purple)}
+.macro.water .mv{color:var(--teal)}
+
+/* meal timeline */
+.meal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin-bottom:9px;display:flex;gap:13px}
+.meal .time{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);flex:0 0 46px;padding-top:1px}
+.meal .mbody{flex:1;min-width:0}
+.meal .mtitle{font-size:14px;font-weight:500;line-height:1.35}
+.meal .mtag{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-left:7px;letter-spacing:.4px;white-space:nowrap}
+.tag-supps{background:rgba(200,90,245,.14);color:var(--purple)}
+.tag-prewo,.tag-postwo{background:rgba(200,245,90,.14);color:var(--accent)}
+.tag-workout{background:rgba(245,90,90,.14);color:var(--red)}
+.tag-meal{background:rgba(90,245,200,.14);color:var(--teal)}
+.tag-snack{background:rgba(245,200,90,.14);color:var(--amber)}
+.opts{margin-top:9px;display:flex;flex-direction:column;gap:6px}
+.opt{background:var(--surface2);border-radius:7px;padding:9px 11px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.opt b{color:var(--text);font-weight:600}
+
+/* supplement cards */
+.supp-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin:22px 0 11px}
+.supp-group-title:first-child{margin-top:4px}
+.supp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:9px}
+.supp-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+.supp-name{font-size:15px;font-weight:600}
+.supp-dose{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap}
+.supp-timing{font-size:12px;color:var(--teal);margin-bottom:8px;font-family:'Space Mono',monospace}
+.supp-notes{font-size:12.5px;color:var(--muted);line-height:1.5}
+.ref-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:9px}
+.ref-row{display:flex;gap:14px;padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.ref-row:last-child{border-bottom:none}
+.ref-row .rt{font-family:'Space Mono',monospace;font-weight:700;color:var(--accent);flex:0 0 90px}
+.aiflam{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:10px;padding:14px;margin-bottom:9px}
+.aiflam .ai-item{font-size:13px;color:var(--text);line-height:1.6;padding-left:15px;position:relative}
+.aiflam .ai-item::before{content:'🌿';position:absolute;left:-2px;font-size:11px}
+.aiflam .ai-item span{color:var(--muted)}
+
+/* key foods */
+.food-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin:20px 0 11px}
+.food-title:first-child{margin-top:4px}
+.food{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:8px}
+.food .fn{font-size:14px;font-weight:500}
+.food .fd{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.food .ff{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal);margin-top:5px}
+
+/* weekly view */
+.wk-day{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin-bottom:9px}
+.wk-day .wkd-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.wk-day .wkd-name{font-size:14px;font-weight:600}
+.wk-day .wkd-focus{font-size:12.5px;color:var(--muted);line-height:1.5}
+.wk-day .wkd-focus b{color:var(--teal);font-weight:600}
+
+/* ---------- TODAY CHECKLIST ---------- */
+.today-hero{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:20px}
+.today-hero .th-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.today-hero .th-count{font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--accent);line-height:1}
+.today-hero .th-count span{font-size:16px;color:var(--muted)}
+.today-hero .th-date{font-size:12px;color:var(--muted);text-align:right;line-height:1.4}
+.today-hero .th-pct{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal);font-weight:700}
+.chk-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:20px 0 10px;font-family:'Space Mono',monospace}
+.chk-item{
+  display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:13px 14px;margin-bottom:8px;transition:.15s;
+}
+.chk-item.done{background:rgba(200,245,90,.045);border-color:rgba(200,245,90,.4)}
+.chk-item .chk-box{
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.chk-item.done .chk-box{background:var(--accent);border-color:var(--accent)}
+.chk-item .chk-box svg{width:13px;height:13px;opacity:0;transition:.15s}
+.chk-item.done .chk-box svg{opacity:1}
+.chk-item .chk-txt{font-size:14px;line-height:1.35;transition:.15s}
+.chk-item.done .chk-txt{color:var(--muted);text-decoration:line-through}
+.reset-day{width:100%;margin-top:14px;padding:12px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600}
+
+/* ---------- BOTTOM NAV ---------- */
+nav.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(15,15,15,.94);
+  backdrop-filter:blur(14px);border-top:1px solid var(--border);
+  display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+}
+nav.bottom button{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--muted);transition:.15s;border-radius:10px;
+}
+nav.bottom button .ni{font-size:20px;line-height:1}
+nav.bottom button .nl{font-size:10px;font-weight:600;letter-spacing:.2px}
+nav.bottom button.active{color:var(--accent)}
+
+.footer-note{text-align:center;font-size:11px;color:var(--dim);margin:26px 0 10px;font-family:'Space Mono',monospace}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-row">
+    <div class="brand">
+      <h1><span>Cal</span>Program</h1>
+      <span class="sub" id="brandSub">Workout</span>
+    </div>
+    <div class="week-badge" id="weekBadge">WEEK 1</div>
+  </div>
+  <div class="daynav" id="dayNav"></div>
+</header>
+
+<main>
+  <div id="viewWorkout"></div>
+  <div id="viewNutrition" class="hidden"></div>
+  <div id="viewSupps" class="hidden"></div>
+  <div id="viewToday" class="hidden"></div>
+  <div class="footer-note">Built for Hari · joint-first calisthenics</div>
+</main>
+
+<nav class="bottom" id="bottomNav">
+  <button data-tab="workout" class="active"><span class="ni">🏋️</span><span class="nl">Workout</span></button>
+  <button data-tab="nutrition"><span class="ni">🥗</span><span class="nl">Nutrition</span></button>
+  <button data-tab="supps"><span class="ni">💊</span><span class="nl">Supps</span></button>
+  <button data-tab="today"><span class="ni">✓</span><span class="nl">Today</span></button>
+</nav>
+
+<script>
+/* ============================================================
+   ICONS
+   ============================================================ */
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0f0f0f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEVRON = '<svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ============================================================
+   ILLUSTRATION LIBRARY (SVG stick-figure PT diagrams)
+   Keyed by keyword; falls back to a placeholder.
+   ============================================================ */
+const ILLU_WRAP = (inner) => `<svg class="illus" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="200" fill="#111"/><line x1="0" y1="185" x2="400" y2="185" stroke="#333" stroke-width="2"/>${inner}</svg>`;
+const L = (t,x=200,y=178) => `<text x="${x}" y="${y}" fill="#666" font-size="11" font-family="monospace" text-anchor="middle">${t}</text>`;
+const AC='#c8f55a', TL='#5af5c8', AM='#f5c85a';
+function line(x1,y1,x2,y2){return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${AC}" stroke-width="4" stroke-linecap="round"/>`}
+function joint(x,y){return `<circle cx="${x}" cy="${y}" r="4.5" fill="${TL}"/>`}
+function head(x,y,r=13){return `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${AC}" stroke-width="4"/>`}
+function arrow(x1,y1,x2,y2){const a=Math.atan2(y2-y1,x2-x1);const s=7;return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${AM}" stroke-width="3"/><polygon points="${x2},${y2} ${x2-s*Math.cos(a-0.5)},${y2-s*Math.sin(a-0.5)} ${x2-s*Math.cos(a+0.5)},${y2-s*Math.sin(a+0.5)}" fill="${AM}"/>`}
+
+const ILLUS = {
+  pushup: ILLU_WRAP(head(80,120)+line(93,124,300,150)+line(300,150,320,120)+line(180,138,175,183)+line(180,138,185,180)+joint(180,138)+joint(300,150)+arrow(200,105,200,130)+L('PUSH-UP — full body plank, elbows 45°')),
+  pike: ILLU_WRAP(head(120,70)+line(133,80,200,150)+line(200,150,270,80)+line(200,150,205,183)+joint(200,150)+arrow(120,50,110,75)+L('PIKE PUSH-UP — hips high, head to floor')),
+  handstand: ILLU_WRAP(line(200,60,200,150)+head(200,42)+line(200,150,175,183)+line(200,150,225,183)+line(200,90,165,90)+line(200,90,235,90)+joint(200,150)+joint(200,90)+arrow(300,120,300,70)+L('HANDSTAND — stack shoulders over wrists')),
+  dip: ILLU_WRAP(head(200,70)+line(200,83,200,150)+line(160,110,200,110)+line(240,110,200,110)+line(160,110,158,150)+line(240,110,242,150)+line(200,150,195,180)+line(200,150,208,180)+joint(200,110)+arrow(260,100,260,140)+L('DIP — chest forward, elbows back')),
+  wallsit: ILLU_WRAP(line(120,80,120,140)+head(120,66)+line(120,140,190,140)+line(190,140,190,183)+line(105,80,105,140)+`<rect x="100" y="60" width="8" height="125" fill="#333"/>`+joint(120,140)+joint(190,140)+L('WALL SIT — thighs parallel, back flat')),
+  squat: ILLU_WRAP(head(200,60)+line(200,73,200,120)+line(200,120,175,155)+line(175,155,180,183)+line(200,120,225,155)+line(225,155,220,183)+line(200,90,235,100)+joint(200,120)+joint(175,155)+joint(225,155)+arrow(280,110,280,150)+L('SQUAT — knees track toes, chest up')),
+  glutebridge: ILLU_WRAP(line(90,183,150,140)+line(150,140,240,140)+line(240,140,270,183)+head(75,175)+joint(150,140)+joint(240,140)+arrow(195,175,195,135)+L('GLUTE BRIDGE — squeeze glutes at top')),
+  deadhang: ILLU_WRAP(`<line x1="120" y1="40" x2="280" y2="40" stroke="#555" stroke-width="4"/>`+line(200,44,200,120)+head(200,135,13)+line(180,45,180,42)+line(220,45,220,42)+joint(200,60)+arrow(300,80,300,120)+L('DEAD HANG — shoulders active, packed down')),
+  hollow: ILLU_WRAP(`<path d="M90,150 Q200,120 310,150" stroke="${AC}" stroke-width="4" fill="none" stroke-linecap="round"/>`+head(75,145)+line(310,150,340,120)+joint(200,133)+arrow(200,100,200,125)+L('HOLLOW BODY — low back pressed to floor')),
+  arch: ILLU_WRAP(`<path d="M90,150 Q200,180 310,150" stroke="${AC}" stroke-width="4" fill="none" stroke-linecap="round"/>`+head(75,150)+line(310,150,340,175)+joint(200,167)+arrow(200,100,200,140)+L('ARCH / SUPERMAN — squeeze glutes & back')),
+  plank: ILLU_WRAP(head(90,120)+line(103,123,280,150)+line(120,127,118,150)+line(280,150,300,120)+joint(120,140)+line(280,150,282,180)+L('PLANK — straight line, brace core')),
+  invertedrow: ILLU_WRAP(`<line x1="120" y1="70" x2="280" y2="70" stroke="#555" stroke-width="4"/>`+line(200,110,300,155)+head(315,160)+line(200,74,200,110)+joint(200,110)+arrow(240,120,215,95)+L('INVERTED ROW — pull chest to bar')),
+  pullup: ILLU_WRAP(`<line x1="120" y1="45" x2="280" y2="45" stroke="#555" stroke-width="4"/>`+line(200,50,200,110)+head(200,125,13)+line(185,48,190,50)+line(215,48,210,50)+joint(200,70)+arrow(300,110,300,60)+L('PULL-UP — lead with chest, squeeze back')),
+  calf: ILLU_WRAP(line(200,60,200,140)+head(200,46)+line(200,140,195,183)+line(200,140,208,178)+`<circle cx="200" cy="178" r="4" fill="none" stroke="${AM}" stroke-width="2"/>`+arrow(260,150,260,110)+L('CALF RAISE — full ankle range, control down')),
+  stretch: ILLU_WRAP(head(150,70)+line(150,83,180,150)+line(180,150,150,183)+line(180,150,215,175)+line(150,110,120,90)+joint(180,150)+arrow(120,100,105,90)+L('STRETCH — breathe, ease into range')),
+  pigeon: ILLU_WRAP(head(110,110)+line(123,116,220,140)+line(150,135,240,155)+line(220,140,300,160)+joint(150,135)+joint(220,140)+L('PIGEON — front shin across, hips square')),
+  mobility: ILLU_WRAP(head(200,60)+line(200,73,200,130)+line(200,95,160,110)+line(200,95,240,80)+line(200,130,180,175)+line(200,130,220,175)+joint(200,95)+joint(200,130)+arrow(255,80,275,60)+arrow(145,110,125,125)+L('MOBILITY — controlled circles, full range')),
+  planche: ILLU_WRAP(line(120,150,300,150)+head(310,145)+line(150,150,148,180)+line(150,150,175,178)+joint(150,150)+arrow(120,120,120,145)+L('PLANCHE LEAN — shoulders past wrists')),
+  bearcrawl: ILLU_WRAP(head(110,130)+line(123,134,250,145)+line(150,140,148,180)+line(250,145,252,180)+joint(150,140)+joint(250,145)+arrow(280,120,320,120)+L('BEAR CRAWL — knees hover, flat back')),
+  copenhagen: ILLU_WRAP(line(100,183,120,140)+line(120,140,290,140)+head(305,135)+`<line x1="180" y1="140" x2="180" y2="183" stroke="#333" stroke-width="3"/>`+joint(120,140)+arrow(200,175,200,135)+L('COPENHAGEN — top leg on bench, hips up')),
+  crow: ILLU_WRAP(head(200,90)+line(200,103,200,140)+line(200,140,175,175)+line(200,140,225,175)+line(180,120,175,175)+line(220,120,225,175)+joint(200,140)+joint(175,175)+joint(225,175)+arrow(280,120,280,90)+L('CROW POSE — knees on triceps, gaze forward')),
+  neck: ILLU_WRAP(head(200,80,15)+line(200,95,200,150)+`<path d="M170,80 Q160,80 160,80" />`+arrow(240,80,270,80)+arrow(160,80,130,80)+joint(200,95)+L('NECK ISO — press hand, resist 4 directions')),
+};
+// keyword → illustration mapping
+function illuFor(name){
+  const n = name.toLowerCase();
+  const map = [
+    ['pseudo planche','planche'],['planche','planche'],
+    ['pike push','pike'],['handstand','handstand'],['wall handstand','handstand'],
+    ['push-up','pushup'],['push up','pushup'],['ring push','pushup'],
+    ['pull-up','pullup'],['pull up','pullup'],['scapular pull','pullup'],['flexed arm hang','pullup'],
+    ['dead hang','deadhang'],['passive hang','deadhang'],
+    ['inverted row','invertedrow'],['band row','invertedrow'],['face pull','invertedrow'],
+    ['dip','dip'],
+    ['wall sit','wallsit'],['wall push','plank'],
+    ['box squat','squat'],['pistol','squat'],['split squat','squat'],['squat','squat'],
+    ['glute bridge','glutebridge'],['terminal knee','wallsit'],['adductor','copenhagen'],
+    ['copenhagen','copenhagen'],
+    ['calf','calf'],['ankle','calf'],
+    ['hollow','hollow'],['l-sit','hollow'],['l sit','hollow'],
+    ['arch','arch'],['superman','arch'],
+    ['plank','plank'],['elbow plank','plank'],['tension hold','plank'],['bear crawl','bearcrawl'],
+    ['pigeon','pigeon'],['couch stretch','stretch'],['hamstring','stretch'],['chest stretch','stretch'],
+    ['thread','stretch'],['child','stretch'],['lat','stretch'],['wrist','mobility'],['stretch','stretch'],
+    ['mobility','mobility'],['cat-cow','mobility'],['cars','mobility'],['circles','mobility'],
+    ['band pull','mobility'],['90/90','stretch'],['pancake','stretch'],['straddle','stretch'],
+    ['thoracic','mobility'],['foam roller','mobility'],['loaded stretch','mobility'],
+    ['crow','crow'],['frog stand','crow'],['skin the cat','deadhang'],['flow','mobility'],
+    ['neck','neck'],['nordic','stretch'],['lateral band','mobility'],['towel squeeze','deadhang'],
+    ['bridge','glutebridge'],
+  ];
+  for(const [k,v] of map){ if(n.includes(k)) return ILLUS[v]; }
+  return `<svg class="illus" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="200" fill="#111"/><text x="200" y="95" fill="#444" font-size="13" font-family="monospace" text-anchor="middle">${name}</text><text x="200" y="113" fill="#333" font-size="11" font-family="monospace" text-anchor="middle">illustration coming soon</text></svg>`;
+}
+
+/* ============================================================
+   DATA — 7-day workout cycle
+   ============================================================ */
+function ex(name,sets,badge,tips,extra={}){return Object.assign({name,sets,badge,tips},extra)}
+
+const DAYS = [
+  { id:0, short:'MON', name:'Monday', type:'push', focus:'Push + Shoulder Mobility', emoji:'💪',
+    phase:'Warm the wrists and shoulders thoroughly before pressing. Quality reps over grinding — stop 1–2 reps short of failure.',
+    isometric:[
+      ex('Wall Push (Chest Isometric)','3×20–30s','joint',['Push into wall at ~70% effort','Elbows tucked, core braced','Breathe steadily throughout'],{joint:'Chest / Shoulder'}),
+      ex('Dead Hang Active (Shoulder Packed)','3×20–30s','joint',['Pull shoulders down and back','Ribs down, don\'t shrug','Builds shoulder stability for pressing'],{joint:'Shoulder'}),
+      ex('Wrist Extension Hold','3×20–30s','joint',['Palm on wall, fingers down','Gentle load — protects wrist for handstands','Ease off if any sharp pain'],{joint:'Wrist'}),
+      ex('Elbow Plank','3×30–45s','joint',['Straight line head to heel','Squeeze glutes, brace abs','Elbows under shoulders'],{joint:'Core / Elbow'}),
+    ],
+    warmup:[
+      ex('Cat-Cow','2×10','mobility',['Move slowly with breath','Full spinal flexion and extension']),
+      ex('Wrist Circles & CARs','1×10 each way','mobility',['Prep wrists before any loading','Both directions, slow and controlled']),
+      ex('Shoulder CARs','1×5 each side','mobility',['Largest circle you can make','Keep the rest of the body still']),
+      ex('Band Pull-Apart','2×15','mobility',['Squeeze shoulder blades','Keep arms straight, wrists neutral']),
+    ],
+    main:[
+      ex('Push-Up Progression','4×8–12','strength',['Elbows at 45°, not flared','Full range — chest to floor','Body rigid like a plank'],{regression:'Incline push-ups (hands on couch/counter)'}),
+      ex('Pike Push-Up','3×6–10','skill',['Hips high, head toward floor','Builds toward handstand push-up','Elbows track slightly forward']),
+      ex('Wall Handstand Hold','3×20–40s','skill',['Stomach or back to wall','Push tall through shoulders','Bail by stepping down calmly'],{regression:'Chest-to-wall walk-up, hold at 45°'}),
+      ex('Tricep Dip Progression','3×8–12','strength',['Chest slightly forward','Elbows track back, not out','Lower until shoulders ~parallel'],{regression:'Bench dips, feet close in'}),
+    ],
+    cooldown:[
+      ex('Doorframe Chest Stretch','2×30s','mobility',['Forearm on frame, step through','Feel across the chest, not shoulder joint']),
+      ex('Thread-the-Needle','2×30s each','mobility',['Rotate through the upper back','Reach arm under and across']),
+      ex('Child\'s Pose + Lat Reach','60s','mobility',['Walk hands to one side for lat','Sink hips back, breathe long']),
+    ],
+  },
+  { id:1, short:'TUE', name:'Tuesday', type:'pull', focus:'Pull + Scapular Control', emoji:'🏋️',
+    phase:'Own the scapula before the arm. Initiate every pull from the shoulder blades, not the biceps.',
+    isometric:[
+      ex('Dead Hang Active','3×20–30s','joint',['Shoulders packed down','Grip firm but relaxed forearms'],{joint:'Shoulder / Grip'}),
+      ex('Flexed Arm Hang (Top of Pull-Up)','3×10–20s','joint',['Chin over bar, chest to bar','Builds top-end pulling strength'],{joint:'Biceps / Back'}),
+      ex('Towel Squeeze (Grip)','3×20–30s','joint',['Crush a rolled towel','Direct grip and forearm loading'],{joint:'Forearm / Grip'}),
+      ex('L-Sit Tuck Hold','3×15–25s','joint',['Knees to chest, hips off floor','Push floor away, depress shoulders'],{joint:'Core / Hip Flexor'}),
+    ],
+    warmup:[
+      ex('Dead Hang','2×30s','mobility',['Decompress the spine','Let shoulders stretch, then activate']),
+      ex('Scapular Pull-Ups','2×8','mobility',['Only the shoulder blades move','Arms stay straight, small range']),
+      ex('Hip 90/90 Stretch','1×45s each','mobility',['Both knees at 90°','Rotate from the hip, tall spine']),
+    ],
+    main:[
+      ex('Pull-Up Progression','4×5–8','skill',['Full dead hang to chin over bar','No kipping — strict and controlled','Lead with the chest'],{regression:'Band-assisted or negatives (5s lower)'}),
+      ex('Inverted Row','3×8–12','strength',['Body straight, heels down','Pull chest to bar, squeeze back']),
+      ex('Face Pulls / Band Row','3×15','strength',['Pull to forehead height','External rotation at the end — shoulder health']),
+      ex('L-sit Progression','3×15–25s','skill',['Tuck → advanced tuck → full','Depress shoulders, point toes'],{regression:'Foot-supported or one-leg tuck'}),
+    ],
+    cooldown:[
+      ex('Lat / Overhead Stretch','2×30s','mobility',['Reach overhead, side bend gently','Feel the lat lengthen']),
+      ex('Wrist Extensor Stretch','2×30s','mobility',['Balances all the gripping','Straight arm, gently pull hand down']),
+      ex('Seated Hamstring Reach','2×30s','mobility',['Hinge from hips, flat back','No bouncing']),
+    ],
+  },
+  { id:2, short:'WED', name:'Wednesday', type:'legs', focus:'Legs + Knee Rehab + Hip Mobility', emoji:'🦵', caution:true,
+    phase:'⚠ Knee caution day. Prioritise VMO and controlled tempo. Any sharp knee pain = regress or stop. This session directly supports Dr. Shinde\'s rehab.',
+    isometric:[
+      ex('Wall Sit','3×20–45s','joint',['Thighs parallel, back flat on wall','Drive through heels','VMO / quad tendon loading'],{joint:'Knee / Quad (VMO)',regression:'Higher position, shorter holds'}),
+      ex('Terminal Knee Extension','3×20–30s','joint',['Straighten knee fully, squeeze quad','Towel under knee for feedback','Isolates the VMO'],{joint:'Knee (VMO)'}),
+      ex('Glute Bridge Hold','3×30–45s','joint',['Squeeze glutes hard at top','Ribs down, don\'t arch low back'],{joint:'Glute / Hip'}),
+      ex('Single-Leg Calf Raise Hold','3×20s each','joint',['Hold at the top','Ankle and Achilles stiffness for flat feet'],{joint:'Ankle / Calf'}),
+      ex('Lying Hip Adductor Squeeze','3×20–30s','joint',['Ball/pillow between knees','Steady inner-thigh squeeze'],{joint:'Adductor / Hip'}),
+    ],
+    warmup:[
+      ex('Ankle Circles + Calf Raises','2×15','mobility',['Wake up the ankles — key for flat feet','Full range both directions']),
+      ex('Hip CARs (Lying)','1×5 each','mobility',['Biggest hip circle possible','Control the whole path']),
+      ex('Glute Bridge','2×12','mobility',['Prime the glutes before squatting','Pause and squeeze at the top']),
+    ],
+    main:[
+      ex('Box Squat Progression','3×8–12','strength',['Sit back to a box, control down','Knees track over toes','Great for rebuilding squat confidence'],{regression:'Higher box, hold something for balance'}),
+      ex('Bulgarian Split Squat','3×8 each','strength',['Rear foot elevated','Front knee tracks toe, torso tall'],{regression:'Both feet flat (split squat)'}),
+      ex('Nordic Hamstring Curl (Negative Only)','3×3–5','strength',['Lower as slowly as possible','Anchor the feet, hands ready to catch','Powerful hamstring/knee protection'],{regression:'Shorter range, more assistance from hands'}),
+      ex('Lateral Band Walk','3×12 each way','strength',['Band above knees, athletic stance','Glute-med work protects the knee']),
+      ex('Pistol Squat Progression','3×3–5 each','skill',['Hold support, sit to a box','Keep heel down, knee tracking'],{regression:'Box pistol / assisted with door frame'}),
+    ],
+    cooldown:[
+      ex('Couch Stretch','2×45s each','mobility',['Rear foot up on couch/wall','Opens hip flexors and quads']),
+      ex('Pigeon Pose','2×45s each','mobility',['Front shin across, hips square','Ease in — never force the knee']),
+      ex('Calf Stretch (Straight + Bent Knee)','2×30s each','mobility',['Straight = gastroc, bent = soleus','Both matter for flat-foot mechanics']),
+    ],
+  },
+  { id:3, short:'THU', name:'Thursday', type:'push', focus:'Push + Core + Handstand Skill', emoji:'⭐',
+    phase:'Skill day — this is where the handstand is built. Practise fresh, keep holds crisp, stop before form breaks down.',
+    isometric:[
+      ex('Hollow Body Hold','3×20–30s','joint',['Low back pressed flat to floor','Arms and legs long, ribs down','Foundation for all straight-body skills'],{joint:'Core / Spine'}),
+      ex('Arch Body Hold','3×20–30s','joint',['Squeeze glutes and upper back','Balances the hollow'],{joint:'Back / Spine'}),
+      ex('Pike Push-Up Hold (Bottom)','3×10–15s','joint',['Pause at the bottom range','Shoulder strength for HSPU'],{joint:'Shoulder'}),
+      ex('Tuck Planche Lean Hold','3×10–15s','joint',['Shoulders forward past wrists','Protracted shoulder blades'],{joint:'Shoulder / Wrist'}),
+    ],
+    warmup:[
+      ex('Wrist Prep + Loaded Stretch','2×30s','mobility',['Essential before any hand balancing','Rock forward and back on hands']),
+      ex('Thoracic Extension on Foam Roller','2×10','mobility',['Roller under mid-back','Open the upper back for the line']),
+      ex('Hollow Body Hold','2×20s','mobility',['Reinforce the hollow shape','Take it into the handstand']),
+    ],
+    main:[
+      ex('Wall Handstand Practice','4×20–40s','skill',['Chest-to-wall for the straight line','Push tall, gaze between hands','Work toward taking a foot off'],{regression:'Wall walk-ups, pike hold on box'}),
+      ex('Pseudo Planche Lean','3×15–20s','skill',['Hands by hips, lean forward','Straight arms, protracted scapula']),
+      ex('Ring Push-Up','3×8–12','strength',['Rings or floor — control the wobble','Turn rings out at the top'],{regression:'Floor push-ups or incline'}),
+      ex('Arch Body Hold','3×20–30s','strength',['Reinforce posterior chain','Squeeze everything']),
+    ],
+    cooldown:[
+      ex('Doorframe Chest Opener','2×30s','mobility',['Counter all the pressing','Feel across the chest']),
+      ex('Pancake / Straddle Fold','2×45s','mobility',['Hinge from the hips, flat back','Builds toward L-sit/manna flexibility']),
+      ex('Wrist Flexor + Extensor Stretch','2×30s each','mobility',['Both sides after hand balancing','Gentle, sustained']),
+    ],
+  },
+  { id:4, short:'FRI', name:'Friday', type:'full', focus:'Full Body + Mobility Deep Dive', emoji:'🔥',
+    phase:'Tie the week together. Flow between movements, spend real time on mobility — this is your investment in longevity.',
+    isometric:[
+      ex('Full Body Tension Hold','3×15–20s','joint',['Plank + total-body squeeze','Teaches full-body tension for skills'],{joint:'Full Body'}),
+      ex('Neck Isometrics (4 Directions)','2×15s each','joint',['Press hand, resist gently','Front, back, both sides — light load'],{joint:'Cervical Spine'}),
+      ex('Wall Sit','3×30–45s','joint',['Keep the knee rehab ticking over','Thighs parallel, drive heels'],{joint:'Knee / Quad'}),
+      ex('Copenhagen Plank','3×15–20s each','joint',['Top leg on couch/chair','Strong adductor and hip work'],{joint:'Adductor / Hip',regression:'Short-lever (knee on support)'}),
+      ex('Passive Hang','2×30–45s','joint',['Let the whole body decompress','Relaxed grip, breathe'],{joint:'Shoulder / Spine'}),
+    ],
+    warmup:[
+      ex('Full Joint Mobility Sequence','5–8 min','mobility',['Neck → wrists → shoulders → hips → ankles','Move every joint through full range']),
+      ex('Bear Crawl','2×20m','mobility',['Knees hover, flat back','Opposite hand/foot, slow and stable']),
+    ],
+    main:[
+      ex('Calisthenics Flow Circuit','3 rounds','skill',['Squat → push-up → hollow → arch → repeat','Move smoothly, minimal rest','Build coordination and control']),
+      ex('Skin the Cat','3×3–5','skill',['On rings or bar — control the rotation','Amazing shoulder mobility + strength'],{regression:'Tuck skin-the-cat, small range'}),
+      ex('Frog Stand / Crow Pose','4×10–30s','skill',['Knees on triceps, gaze forward','Balance and wrist prep for planche'],{regression:'One toe on floor for balance'}),
+    ],
+    cooldown:[
+      ex('10-Minute Mobility Flow','10 min','mobility',['Hips, shoulders, spine, ankles','Slow, breath-led — the weekly reset']),
+    ],
+  },
+  { id:5, short:'SAT', name:'Saturday', type:'rest', focus:'Active Recovery', emoji:'🌿', rest:true,
+    phase:null,
+    isometric:[
+      ex('Full Joint Isometric Circuit','1 round, light','joint',['One easy hold per major joint','Nourish, don\'t fatigue'],{joint:'All Joints (light)'}),
+      ex('Passive Hang','2×30s','joint',['Gentle decompression','Relaxed and easy'],{joint:'Shoulder / Spine'}),
+    ],
+    restActivities:[
+      {emoji:'🚶',text:'Easy walk (20–30 min) — great for flat feet and circulation'},
+      {emoji:'🧘',text:'Light mobility flow — follow the body, no intensity'},
+      {emoji:'🌬️',text:'Breathwork — 5–10 min, downshift the nervous system'},
+      {emoji:'🧊',text:'Cold shower — recovery and alertness'},
+      {emoji:'💊',text:'Supplement reminder — don\'t skip on rest days'},
+    ],
+  },
+  { id:6, short:'SUN', name:'Sunday', type:'rest', focus:'Full Rest', emoji:'😴', rest:true,
+    phase:null,
+    isometric:[
+      ex('Morning Joint Wake-Up (5 min)','1 round, minimal','joint',['Gentle circles for every joint','Do it in bed if you like'],{joint:'All Joints (minimal)'}),
+      ex('Doorframe Chest + Shoulder Press','2×20s','joint',['Light isometric press into the frame','Wake up the shoulders'],{joint:'Shoulder / Chest'}),
+    ],
+    restActivities:[
+      {emoji:'😴',text:'Sleep priority — the real recovery happens here'},
+      {emoji:'🍲',text:'Collagen-rich meal — bone broth soup is ideal'},
+      {emoji:'📝',text:'Weekly review — what went well, what to adjust'},
+      {emoji:'🎯',text:'Set next week\'s micro-goal — one small, specific target'},
+    ],
+  },
+];
+
+/* ============================================================
+   SKILLS — 6 skills × 8 stages
+   ============================================================ */
+const SKILLS = [
+  { id:'pushup', name:'Push-Up', stages:['Wall Push-Up','Incline Push-Up','Knee Push-Up','Full Push-Up','Diamond Push-Up','Archer Push-Up','Pseudo Planche Push-Up','HSPU Negative'] },
+  { id:'pullup', name:'Pull-Up', stages:['Dead Hang','Scapular Pull-Up','Negative Pull-Up','Band-Assisted Pull-Up','Full Pull-Up','Chest-to-Bar','Archer Pull-Up','L-sit Pull-Up'] },
+  { id:'squat', name:'Squat', stages:['Box Squat','Assisted Squat','Full Squat','Split Squat','Bulgarian Split Squat','Cossack Squat','Pistol Squat','Shrimp Squat'] },
+  { id:'dip', name:'Dip', stages:['Bench Dip','Band-Assisted Dip','Negative Dip','Parallel Bar Dip','Ring Dip','Weighted Dip','Bulgarian Dip','L-sit Dip'] },
+  { id:'core', name:'Core / L-sit', stages:['Tuck Hold','Advanced Tuck','One-Leg Tuck','L-sit (Parallettes)','L-sit (Floor)','V-sit Progression','Straddle Planche','Manna Progression'] },
+  { id:'handstand', name:'Handstand', stages:['Wall Hold 10s','Wall Hold 30s','Wall Hold 60s','Chest-to-Wall Hold','Freestanding Kick-up','Freestanding 5s','Freestanding 30s','HS Walk'] },
+];
+
+/* ============================================================
+   NUTRITION DATA
+   ============================================================ */
+const MACROS = {
+  training:{ cal:'2,400–2,600', pro:'160–180g', carb:'250–300g', fat:'70–85g', water:'4L' },
+  rest:{ cal:'2,000–2,200', pro:'150–160g', carb:'170–220g', fat:'70–80g', water:'3.5L' },
+};
+const TAG_LABEL = { supps:'Supps', prewo:'Pre-WO', postwo:'Post-WO', workout:'Workout', meal:'Meal', snack:'Snack' };
+const MEALS = [
+  { time:'6:30', title:'Wake-up: Collagen 10g + Vitamin C 200mg', tag:'supps' },
+  { time:'7:00', title:'Pre-Workout Meal', tag:'prewo', opts:[
+    '<b>A · Quick:</b> 2 bananas + 2 boiled eggs + black coffee',
+    '<b>B · Fuller:</b> 50g oats + milk + honey + 4 dates + coffee',
+    '<b>C · Lightest:</b> 2 dates + peanut butter + electrolytes' ] },
+  { time:'8:30', title:'Training Session', tag:'workout' },
+  { time:'9:45', title:'Post-Workout Meal + Glucosamine 1500mg', tag:'postwo', opts:[
+    '<b>A:</b> 3 scrambled eggs + sourdough + avocado + OJ',
+    '<b>B:</b> 200g Greek yogurt + berries + granola + almonds',
+    '<b>C:</b> Whey shake + banana + rice cakes with peanut butter' ] },
+  { time:'12:30', title:'Lunch — biggest meal of the day', tag:'meal', opts:[
+    'Protein + carbs + veg + olive oil. Add turmeric + black pepper + lemon.' ] },
+  { time:'16:00', title:'Afternoon Snack + Thorne B12', tag:'snack', opts:[
+    'Bone broth or a protein snack. Green tea.' ] },
+  { time:'19:30', title:'Dinner (varies by day — see Weekly)', tag:'meal', opts:[
+    'Protein + dark leafy greens + healthy fat.' ] },
+  { time:'21:30', title:'Pre-bed: Mag Glycinate 400mg + Vit D + Omega-3 + casein snack', tag:'supps' },
+];
+const SUPP_GROUPS = [
+  { title:'Joint & Cartilage', items:[
+    { name:'Collagen Peptides + Vit C', dose:'10g + 200mg', timing:'30–60 min pre-workout · every day', notes:'Vitamin C is mandatory with collagen. Circulating collagen during exercise is directed to joint tissue — timing matters.' },
+    { name:'Glucosamine Sulfate', dose:'1500mg', timing:'Post-workout with food', notes:'Prescribed by Dr. Shinde. Takes 6–8 weeks to feel the effect. Always take with food.' },
+    { name:'Omega-3 Fish Oil', dose:'2–3g EPA+DHA', timing:'With dinner', notes:'Skip on salmon / hammour / sardines / mackerel days. Anti-inflammatory.' },
+    { name:'Vitamin D3 + K2', dose:'5000 IU D3 + 100mcg K2', timing:'With evening meal', notes:'Per Dr. Shinde protocol. Fat-soluble — needs dietary fat to absorb.' },
+  ]},
+  { title:'Recovery & Micronutrients', items:[
+    { name:'Magnesium Glycinate', dose:'400mg', timing:'30–60 min before bed', notes:'Glycinate form only — not oxide. Critical for sleep quality with a newborn at home.' },
+    { name:'Thorne B12 (Methylcobalamin)', dose:'1 capsule', timing:'Afternoon with food', notes:'Avoid right before bed. Methylcobalamin form — don\'t switch to a cheaper brand.' },
+  ]},
+  { title:'Protein', items:[
+    { name:'Whey Protein', dose:'1 scoop · ~25–30g', timing:'Post-workout, or any time to close the daily protein gap', notes:'Fast-digesting — an easy way to reach 160–180g on training days (150–160g rest) when whole-food protein falls short or time is tight with the newborn. Pairs well post-workout with a banana or rice cakes. A convenient top-up, not a replacement for whole-food protein.' },
+  ]},
+];
+const SUPP_REF = [
+  { t:'6:30', s:'Collagen 10g + Vit C 200mg' },
+  { t:'9:45', s:'Glucosamine 1500mg with food' },
+  { t:'16:00', s:'Thorne B12' },
+  { t:'21:30', s:'Mag Glycinate 400mg + Vit D3 + Omega-3' },
+];
+const ANTI_INFLAM = [
+  ['Turmeric 1 tsp + black pepper pinch','every cooked meal'],
+  ['Fresh ginger','daily in tea or food'],
+  ['Green tea','2–3 cups daily'],
+  ['Lemon juice','every main meal — Vit C + iron absorption'],
+];
+const FOODS_JOINT = [
+  ['Bone broth','Glycine, collagen, gelatin','200ml · 3–4×/week'],
+  ['Salmon / hammour','Omega-3, protein, Vit D','3×/week'],
+  ['Eggs','Complete protein, leucine, Vit D','3–4 daily'],
+  ['Chicken thighs (skin-on)','Collagen, glycine','preferred over breast'],
+  ['Berries','Antioxidants, Vit C','daily in shakes/breakfast'],
+  ['Dark leafy greens','Magnesium, Vit K','every dinner'],
+  ['Avocado','Oleic acid, fat-soluble vitamin carrier',''],
+  ['Lentils / chickpeas','Plant protein, fibre',''],
+];
+const FOODS_DUBAI = [
+  ['Laban (full-fat)','Cheap casein source, probiotics','~10g protein / 250ml'],
+  ['Dates (Ajwa / Medjool)','Ideal pre-workout carb','3–4 dates ≈ 70g carbs'],
+  ['Al Mina fish souq','Fresh hammour + king fish','buy Thursday, freeze in portions'],
+  ['Sunday batch cook','Rice + roast veg + 6 eggs + chicken','Mon–Wed sorted in 90 min'],
+];
+const DINNERS = [
+  ['Monday','Salmon (omega-3 load)'],
+  ['Tuesday','Beef or lamb with lentils'],
+  ['Wednesday','Slow-cooked lamb (collagen-rich)'],
+  ['Thursday','Chicken + sweet potato'],
+  ['Friday','Salmon (end-of-week omega-3)'],
+  ['Saturday','Eggs or chicken soup (lighter)'],
+  ['Sunday','Family meal — collagen-rich (bone broth soup)'],
+];
+const CHECKLIST = [
+  { g:'Morning', items:[
+    '500ml water on waking',
+    'Collagen 10g + Vit C 200mg',
+    'Pre-workout meal',
+    'Training session',
+    'Post-workout meal (within 45 min)',
+    'Glucosamine 1500mg with food',
+  ]},
+  { g:'Midday', items:[
+    'Lunch — protein + carbs + veg + olive oil',
+    'Bone broth or protein snack',
+    'Thorne B12',
+    '2L water by 4pm',
+  ]},
+  { g:'Evening', items:[
+    'Dinner — protein + greens + fat',
+    'Turmeric + black pepper in meal',
+    'Omega-3 (if no fish today)',
+    'Vit D3 with dinner',
+    'Casein snack (cottage cheese / warm milk)',
+    'Magnesium Glycinate 400mg',
+    '4L total water today',
+  ]},
+];
+const CHECKLIST_FLAT = CHECKLIST.flatMap(g=>g.items);
+
+/* ============================================================
+   STATE + PERSISTENCE
+   ============================================================ */
+const store = {
+  get(k,def){ try{ const v=localStorage.getItem(k); return v===null?def:JSON.parse(v); }catch(e){ return def; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+};
+let checked   = store.get('cal_checked',{});     // { d0:{ iso_0:true } }
+let completed = store.get('cal_completed',{});    // { '0':true }
+let skills    = store.get('cal_skills',{});       // { pushup:2 }
+let week      = store.get('cal_week',1);
+let dayType   = store.get('nutri_daytype','training');
+let todayChk  = store.get('nutri_today',{});      // { '2026-07-15':{ '0':true } }
+
+SKILLS.forEach(s=>{ if(skills[s.id]===undefined) skills[s.id]=0; });
+
+const todayKey = () => new Date().toISOString().slice(0,10);
+function jsWeekdayToId(){ const d=new Date().getDay(); return d===0?6:d-1; } // Sun=6, Mon=0
+let currentDay = jsWeekdayToId();
+let currentTab = 'workout';
+let nutriSub = 'daily';
+
+/* ============================================================
+   RENDER — WORKOUT
+   ============================================================ */
+function sectionKey(sec,i){return sec+'_'+i}
+
+function dayProgress(day){
+  const items = collectItems(day);
+  const dc = checked['d'+day.id]||{};
+  const done = items.filter(it=>dc[it.key]).length;
+  return { done, total:items.length };
+}
+function collectItems(day){
+  const out=[];
+  (day.isometric||[]).forEach((e,i)=>out.push({key:sectionKey('iso',i),ex:e}));
+  if(!day.rest){
+    (day.warmup||[]).forEach((e,i)=>out.push({key:sectionKey('wu',i),ex:e}));
+    (day.main||[]).forEach((e,i)=>out.push({key:sectionKey('mn',i),ex:e}));
+    (day.cooldown||[]).forEach((e,i)=>out.push({key:sectionKey('cd',i),ex:e}));
+  }
+  return out;
+}
+
+function exCard(day,secKey,idx,e,iso){
+  const dc = checked['d'+day.id]||{};
+  const key = sectionKey(secKey,idx);
+  const done = !!dc[key];
+  const badgeCls = 'b-'+e.badge;
+  const badgeTxt = e.badge==='joint'?'ISO':e.badge;
+  const hasTimer = iso && /(\d+)\s*s/i.test(e.sets);
+  const firstSec = hasTimer ? (e.sets.match(/(\d+)\s*s/i)[1]) : 30;
+  return `
+  <div class="card ${iso?'iso':''} ${done?'done':''}" data-day="${day.id}" data-key="${key}">
+    <div class="card-main">
+      <div class="check" data-action="toggle">${CHECK_SVG}</div>
+      <div class="ex-body" data-action="toggle">
+        <div class="ex-name">${e.name}</div>
+        <div class="ex-meta">
+          <span class="ex-sets">${e.sets}</span>
+          <span class="badge ${badgeCls}">${badgeTxt}</span>
+          ${e.joint?`<span class="ex-joint">${e.joint}</span>`:''}
+        </div>
+      </div>
+      <button class="expand-btn" data-action="expand">${CHEVRON}</button>
+    </div>
+    <div class="detail">
+      <div class="detail-inner">
+        ${illuFor(e.name)}
+        <ul class="tips">${(e.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul>
+        ${e.regression?`<div class="regress"><b>If too hard:</b> ${e.regression}</div>`:''}
+        ${hasTimer?`
+        <div class="timer" data-secs="${firstSec}">
+          <span class="tval">0:${String(firstSec).padStart(2,'0')}</span>
+          <button data-action="timer-start">Start hold</button>
+          <button class="ghost" data-action="timer-reset">Reset</button>
+          <span class="thint">hold timer</span>
+        </div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function sectionBlock(day,num,title,hint,secKey,list,iso){
+  if(!list||!list.length) return '';
+  return `
+  <div class="sec-head"><span class="num">${num}</span><h3>${title}</h3>${hint?`<span class="hint">${hint}</span>`:''}</div>
+  ${list.map((e,i)=>exCard(day,secKey,i,e,iso)).join('')}`;
+}
+
+function renderWorkout(){
+  const day = DAYS[currentDay];
+  const prog = dayProgress(day);
+  const pct = prog.total?Math.round(prog.done/prog.total*100):0;
+  const dayDone = !!completed[day.id];
+  const canComplete = prog.total>0 && prog.done/prog.total>=0.5;
+
+  let html = '';
+  // phase banner
+  if(day.phase){
+    let p = day.phase;
+    if(day.caution){ p = p.replace(/^(⚠[^.]*\.)/, '<b>$1</b>'); }
+    html += `<div class="phase ${day.caution?'caution':''}">${p}</div>`;
+  }
+
+  html += `<div class="day-title"><h2>${day.name}</h2><span class="type-pill tp-${day.type}">${day.type}</span></div>`;
+  html += `<div class="day-focus">${day.focus}</div>`;
+
+  if(!day.rest){
+    html += `<div class="progress-wrap">
+      <div class="progress-top"><span class="lbl">Session progress</span><span class="val">${prog.done}/${prog.total}</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+    </div>`;
+  }
+
+  // 1 Isometric (all days)
+  html += sectionBlock(day,'01',day.rest?'Isometric Joint Work (light)':'Isometric Joint Work','before warm-up','iso',day.isometric,true);
+
+  if(day.rest){
+    html += `<div class="sec-head"><span class="num">02</span><h3>Recovery Activities</h3></div>`;
+    html += `<ul class="rest-list">${day.restActivities.map(a=>`<li><span class="em">${a.emoji}</span><span>${a.text}</span></li>`).join('')}</ul>`;
+  } else {
+    html += sectionBlock(day,'02','Warm-Up','','wu',day.warmup,false);
+    html += sectionBlock(day,'03','Main Work','','mn',day.main,false);
+    html += sectionBlock(day,'04','Cool-Down','','cd',day.cooldown,false);
+
+    html += `<button class="mark-btn ${dayDone?'completed':(canComplete?'ready':'')}" data-action="mark-day" data-day="${day.id}">
+      ${dayDone?'✓ Day complete':(canComplete?'Mark day complete':'Complete 50% to finish the day')}
+    </button>`;
+  }
+
+  // Skill tracker
+  html += renderSkillBlock();
+  // Week overview
+  html += renderWeekBlock();
+
+  document.getElementById('viewWorkout').innerHTML = html;
+  renderDayNav();
+  document.getElementById('weekBadge').textContent = 'WEEK '+week;
+}
+
+function renderSkillBlock(){
+  let h = `<div class="skill-block"><div class="sec-head"><span class="num">◆</span><h3>Skill Progression</h3></div>`;
+  SKILLS.forEach(s=>{
+    const cur = skills[s.id];
+    h += `<div class="skill-card" data-skill="${s.id}">
+      <div class="skill-top">
+        <span class="skill-name">${s.name}</span>
+        <span class="skill-stagelbl">Stage <span class="skill-cur">${cur+1}</span>/8</span>
+      </div>
+      <div class="stage-pills">
+        ${s.stages.map((st,i)=>{
+          let bg='var(--surface2)',col='var(--dim)',bd='1px solid var(--border)';
+          if(i<cur){bg='rgba(200,245,90,0.12)';col='rgba(200,245,90,0.65)';bd='1px solid rgba(200,245,90,0.25)';}
+          if(i===cur){bg='var(--accent)';col='var(--bg)';bd='1px solid var(--accent)';}
+          return `<button style="background:${bg};color:${col};border:${bd};" data-action="skill-set" data-skill="${s.id}" data-stage="${i}">${i+1}</button>`;
+        }).join('')}
+      </div>
+      <div class="skill-current-name">Now: <b>${s.stages[cur]}</b></div>
+      <div class="skill-ctrl">
+        <button style="flex:0 0 40px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);" data-action="skill-reset" data-skill="${s.id}">↺</button>
+        <button style="flex:1;background:var(--surface2);color:var(--text);border:1px solid var(--border);" data-action="skill-dec" data-skill="${s.id}">−</button>
+        <button style="flex:1;background:var(--accent);color:var(--bg);border:1px solid var(--accent);" data-action="skill-inc" data-skill="${s.id}">+</button>
+      </div>
+    </div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+
+function renderWeekBlock(){
+  let h = `<div class="week-block"><div class="sec-head"><span class="num">▦</span><h3>Week Overview</h3></div><div class="week-grid">`;
+  DAYS.forEach(d=>{
+    const done = !!completed[d.id];
+    const isToday = d.id===currentDay;
+    const emoji = done ? '✅' : d.emoji;
+    h += `<button class="week-cell ${done?'done':''} ${isToday?'today':''}" data-action="goto-day" data-day="${d.id}">
+      <span class="wd">${d.short}</span><span class="we">${emoji}</span>
+    </button>`;
+  });
+  h += `</div></div>`;
+  return h;
+}
+
+function renderDayNav(){
+  const nav = document.getElementById('dayNav');
+  nav.innerHTML = DAYS.map(d=>{
+    const active = d.id===currentDay;
+    const done = !!completed[d.id];
+    return `<button class="${active?'active':''} ${done?'done':''} ${d.rest?'rest':''}" data-action="nav-day" data-day="${d.id}">
+      <span>${d.short}</span><span class="dot"></span>
+    </button>`;
+  }).join('');
+}
+
+/* ============================================================
+   RENDER — NUTRITION
+   ============================================================ */
+function renderNutrition(){
+  let html = `<div class="subtabs">
+    <button class="${nutriSub==='daily'?'active':''}" data-action="nutri-sub" data-sub="daily">Daily Plan</button>
+    <button class="${nutriSub==='weekly'?'active':''}" data-action="nutri-sub" data-sub="weekly">Weekly</button>
+    <button class="${nutriSub==='foods'?'active':''}" data-action="nutri-sub" data-sub="foods">Key Foods</button>
+  </div>`;
+
+  if(nutriSub==='daily'){
+    const m = MACROS[dayType];
+    html += `<div class="daytype-toggle">
+      <button class="${dayType==='training'?'active':''}" data-action="daytype" data-type="training">Training Day</button>
+      <button class="${dayType==='rest'?'active':''}" data-action="daytype" data-type="rest">Rest Day</button>
+    </div>`;
+    html += `<div class="macro-grid">
+      <div class="macro cal"><div class="ml">Calories</div><div class="mv">${m.cal}</div></div>
+      <div class="macro pro"><div class="ml">Protein</div><div class="mv">${m.pro}</div></div>
+      <div class="macro carb"><div class="ml">Carbs</div><div class="mv">${m.carb}</div></div>
+      <div class="macro fat"><div class="ml">Fats</div><div class="mv">${m.fat}</div></div>
+    </div>
+    <div class="macro water" style="margin-bottom:22px"><div class="ml">Water</div><div class="mv">${m.water}</div></div>`;
+
+    html += `<div class="sec-head"><span class="num">☀</span><h3>Daily Meal Schedule</h3></div>`;
+    html += MEALS.map(meal=>`
+      <div class="meal">
+        <div class="time">${meal.time}</div>
+        <div class="mbody">
+          <div><span class="mtitle">${meal.title}</span><span class="mtag tag-${meal.tag}">${TAG_LABEL[meal.tag]}</span></div>
+          ${meal.opts?`<div class="opts">${meal.opts.map(o=>`<div class="opt">${o}</div>`).join('')}</div>`:''}
+        </div>
+      </div>`).join('');
+  }
+
+  if(nutriSub==='weekly'){
+    html += `<div class="sec-head"><span class="num">▦</span><h3>Weekly Dinner Rotation</h3></div>`;
+    html += DINNERS.map(([d,f],i)=>`
+      <div class="wk-day">
+        <div class="wkd-top"><span class="wkd-name">${d}</span><span class="type-pill tp-${DAYS[i].type}" style="margin-left:auto">${DAYS[i].focus.split(' ')[0]}</span></div>
+        <div class="wkd-focus">Dinner: <b>${f}</b></div>
+      </div>`).join('');
+  }
+
+  if(nutriSub==='foods'){
+    html += `<div class="food-title">Joint Repair Priority</div>`;
+    html += FOODS_JOINT.map(([n,d,f])=>`
+      <div class="food"><div class="fn">${n}</div><div class="fd">${d}</div>${f?`<div class="ff">${f}</div>`:''}</div>`).join('');
+    html += `<div class="food-title">Dubai-Specific Hacks</div>`;
+    html += FOODS_DUBAI.map(([n,d,f])=>`
+      <div class="food"><div class="fn">${n}</div><div class="fd">${d}</div>${f?`<div class="ff">${f}</div>`:''}</div>`).join('');
+  }
+
+  document.getElementById('viewNutrition').innerHTML = html;
+}
+
+/* ============================================================
+   RENDER — SUPPS
+   ============================================================ */
+function renderSupps(){
+  let html='';
+  SUPP_GROUPS.forEach(g=>{
+    html += `<div class="supp-group-title">${g.title}</div>`;
+    html += g.items.map(s=>`
+      <div class="supp-card">
+        <div class="supp-head"><span class="supp-name">${s.name}</span><span class="supp-dose">${s.dose}</span></div>
+        <div class="supp-timing">${s.timing}</div>
+        <div class="supp-notes">${s.notes}</div>
+      </div>`).join('');
+  });
+  html += `<div class="supp-group-title">Quick Reference</div><div class="ref-card">`;
+  html += SUPP_REF.map(r=>`<div class="ref-row"><span class="rt">${r.t}</span><span>${r.s}</span></div>`).join('');
+  html += `</div>`;
+  html += `<div class="supp-group-title">Food-Based Anti-Inflammatory</div><div class="aiflam">`;
+  html += ANTI_INFLAM.map(([a,b])=>`<div class="ai-item">${a} <span>— ${b}</span></div>`).join('');
+  html += `</div>`;
+  document.getElementById('viewSupps').innerHTML = html;
+}
+
+/* ============================================================
+   RENDER — TODAY CHECKLIST
+   ============================================================ */
+function renderToday(){
+  const key = todayKey();
+  const state = todayChk[key]||{};
+  const total = CHECKLIST_FLAT.length;
+  const done = Object.values(state).filter(Boolean).length;
+  const pct = Math.round(done/total*100);
+  const dateStr = new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+
+  let html = `<div class="today-hero">
+    <div class="th-top">
+      <div><div class="th-count">${done}<span>/${total}</span></div></div>
+      <div class="th-date">${dateStr}<br><span class="th-pct">${pct}% done</span></div>
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+  </div>`;
+
+  let idx=0;
+  CHECKLIST.forEach(group=>{
+    html += `<div class="chk-group-title">${group.g}</div>`;
+    group.items.forEach(item=>{
+      const i=idx++;
+      const isDone = !!state[i];
+      html += `<div class="chk-item ${isDone?'done':''}" data-action="chk-toggle" data-idx="${i}">
+        <div class="chk-box">${CHECK_SVG}</div>
+        <div class="chk-txt">${item}</div>
+      </div>`;
+    });
+  });
+  html += `<button class="reset-day" data-action="chk-reset">Reset today's checklist</button>`;
+  document.getElementById('viewToday').innerHTML = html;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+function saveWorkout(){ store.set('cal_checked',checked); store.set('cal_completed',completed); store.set('cal_skills',skills); store.set('cal_week',week); }
+
+function toggleExercise(dayId,key){
+  const dk='d'+dayId;
+  if(!checked[dk]) checked[dk]={};
+  checked[dk][key]=!checked[dk][key];
+  saveWorkout(); renderWorkout();
+}
+function markDay(dayId){
+  completed[dayId]=!completed[dayId];
+  // week completion: all training days (Mon–Fri = 0..4) done
+  const allTraining=[0,1,2,3,4].every(id=>completed[id]);
+  if(allTraining){
+    week+=1;
+    completed={}; checked={};
+    alert('Week complete! Starting Week '+week+'. Progress reset for the new week — skills are kept.');
+  }
+  saveWorkout(); renderWorkout();
+}
+function skillSet(id,stage){ skills[id]=Math.max(0,Math.min(7,stage)); saveWorkout(); renderWorkout(); }
+function skillInc(id){ skillSet(id,skills[id]+1); }
+function skillDec(id){ skillSet(id,skills[id]-1); }
+function skillReset(id){ skillSet(id,0); }
+
+function toggleChk(i){
+  const key=todayKey();
+  if(!todayChk[key]) todayChk[key]={};
+  todayChk[key][i]=!todayChk[key][i];
+  store.set('nutri_today',todayChk); renderToday();
+}
+function resetChk(){
+  const key=todayKey(); todayChk[key]={}; store.set('nutri_today',todayChk); renderToday();
+}
+
+/* timers */
+const timers = new WeakMap();
+function startTimer(el){
+  const disp=el.querySelector('.tval');
+  const btn=el.querySelector('[data-action="timer-start"]');
+  if(timers.get(el)){ clearInterval(timers.get(el)); timers.delete(el); btn.textContent='Start hold'; return; }
+  let secs=parseInt(el.dataset.secs,10);
+  btn.textContent='Pause';
+  const id=setInterval(()=>{
+    secs--;
+    disp.textContent='0:'+String(Math.max(secs,0)).padStart(2,'0');
+    if(secs<=0){ clearInterval(id); timers.delete(el); btn.textContent='Start hold';
+      disp.textContent='Done ✓'; try{navigator.vibrate&&navigator.vibrate(200);}catch(e){} }
+  },1000);
+  timers.set(el,id);
+}
+function resetTimer(el){
+  if(timers.get(el)){ clearInterval(timers.get(el)); timers.delete(el); }
+  const secs=parseInt(el.dataset.secs,10);
+  el.querySelector('.tval').textContent='0:'+String(secs).padStart(2,'0');
+  el.querySelector('[data-action="timer-start"]').textContent='Start hold';
+}
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+const SUBS={workout:'Workout',nutrition:'Nutrition',supps:'Supplements',today:'Today'};
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('viewWorkout').classList.toggle('hidden',tab!=='workout');
+  document.getElementById('viewNutrition').classList.toggle('hidden',tab!=='nutrition');
+  document.getElementById('viewSupps').classList.toggle('hidden',tab!=='supps');
+  document.getElementById('viewToday').classList.toggle('hidden',tab!=='today');
+  document.getElementById('dayNav').style.display = tab==='workout'?'flex':'none';
+  document.getElementById('brandSub').textContent=SUBS[tab];
+  document.querySelectorAll('#bottomNav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  if(tab==='nutrition') renderNutrition();
+  if(tab==='supps') renderSupps();
+  if(tab==='today') renderToday();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* ============================================================
+   EVENT DELEGATION
+   ============================================================ */
+document.getElementById('bottomNav').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-tab]'); if(b) switchTab(b.dataset.tab);
+});
+
+document.body.addEventListener('click',e=>{
+  const nav=e.target.closest('[data-action="nav-day"],[data-action="goto-day"]');
+  if(nav){ currentDay=+nav.dataset.day; renderWorkout(); if(nav.dataset.action==='goto-day'){window.scrollTo({top:0,behavior:'smooth'});} return; }
+
+  const card=e.target.closest('.card');
+  if(card){
+    const act=e.target.closest('[data-action]');
+    if(act && act.dataset.action==='expand'){ card.classList.toggle('open'); return; }
+    if(act && act.dataset.action==='toggle'){ toggleExercise(+card.dataset.day,card.dataset.key); return; }
+    if(act && act.dataset.action==='timer-start'){ startTimer(act.closest('.timer')); return; }
+    if(act && act.dataset.action==='timer-reset'){ resetTimer(act.closest('.timer')); return; }
+  }
+
+  const a=e.target.closest('[data-action]'); if(!a) return;
+  const act=a.dataset.action;
+  if(act==='mark-day') markDay(+a.dataset.day);
+  else if(act==='skill-inc') skillInc(a.dataset.skill);
+  else if(act==='skill-dec') skillDec(a.dataset.skill);
+  else if(act==='skill-reset') skillReset(a.dataset.skill);
+  else if(act==='skill-set') skillSet(a.dataset.skill,+a.dataset.stage);
+  else if(act==='nutri-sub'){ nutriSub=a.dataset.sub; renderNutrition(); }
+  else if(act==='daytype'){ dayType=a.dataset.type; store.set('nutri_daytype',dayType); renderNutrition(); }
+  else if(act==='chk-toggle') toggleChk(+a.dataset.idx);
+  else if(act==='chk-reset') resetChk();
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderWorkout();
+switchTab('workout');
+</script>
+</body>
+</html>
